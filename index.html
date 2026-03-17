@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>EasyCollect</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; min-height: 100vh; }
+    .screen { display: none; max-width: 480px; margin: 0 auto; padding: 1.25rem 1rem 6rem; }
+    .screen.active { display: block; }
+    h1 { font-size: 22px; font-weight: 800; }
+    h2 { font-size: 18px; font-weight: 700; }
+    h3 { font-size: 16px; font-weight: 700; }
+    p { font-size: 14px; line-height: 1.5; }
+    .card { background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .card-active { border: 2px solid #3b82f6; }
+    .btn { display: block; width: 100%; padding: 13px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; }
+    .btn-blue { background: #3b82f6; color: #fff; }
+    .btn-green { background: #10b981; color: #fff; }
+    .btn-gray { background: #e5e7eb; color: #9ca3af; }
+    .btn-outline { background: #fff; color: #374151; border: 1px solid #d1d5db; }
+    .btn-waze { background: #33ccff; color: #fff; font-weight: 700; }
+    .btn-sm { padding: 6px 12px; font-size: 13px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; font-weight: 600; }
+    .btn-danger { color: #ef4444; border-color: #fca5a5; background: #fef2f2; }
+    input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; background: #fff; }
+    input:focus, textarea:focus { border-color: #3b82f6; }
+    textarea { resize: vertical; min-height: 70px; }
+    .label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-gray { background: #f3f4f6; color: #6b7280; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .row { display: flex; align-items: center; gap: 10px; }
+    .row-between { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0; }
+    .circle-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+    .progress-bar { height: 6px; background: rgba(255,255,255,0.3); border-radius: 4px; overflow: hidden; margin: 8px 0 4px; }
+    .progress-fill { height: 100%; background: #fff; border-radius: 4px; transition: width 0.4s; }
+    .hero { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 16px; padding: 16px 18px; margin-bottom: 16px; color: #fff; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .niveau-btn { padding: 8px 4px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; }
+    .niveau-btn.active { color: #fff; border-color: transparent; }
+    .note-banner { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; }
+    .fixed-bottom { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem; background: #fff; border-top: 1px solid #e5e7eb; z-index: 50; }
+    .error-msg { font-size: 12px; color: #ef4444; text-align: center; margin-bottom: 8px; }
+    .loading { text-align: center; padding: 3rem; color: #6b7280; }
+    .sig-canvas { border: 1px solid #e5e7eb; border-radius: 10px; background: #fafafa; touch-action: none; cursor: crosshair; width: 100%; height: 130px; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: flex-end; justify-content: center; z-index: 100; }
+    .modal { background: #fff; border-radius: 20px 20px 0 0; padding: 1.5rem; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+    .modal-handle { width: 40px; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 0 auto 1.25rem; }
+    .back-btn { font-size: 22px; padding: 2px 10px; background: none; border: none; cursor: pointer; color: #374151; }
+    .chevron { color: #9ca3af; font-size: 20px; }
+    .sep { height: 1px; background: #f3f4f6; margin: 12px 0; }
+    .mb4 { margin-bottom: 4px; }
+    .mb8 { margin-bottom: 8px; }
+    .mb12 { margin-bottom: 12px; }
+    .mb16 { margin-bottom: 16px; }
+    .gap8 { gap: 8px; }
+  </style>
+</head>
+<body>
+
+<!-- SCREEN: HOME -->
+<div id="screen-home" class="screen active">
+  <div style="text-align:center; padding: 3rem 1rem 2rem;">
+    <div style="font-size:48px; margin-bottom:12px;">🚚</div>
+    <h1 style="margin-bottom:6px;">EasyCollect</h1>
+    <p style="color:#6b7280; margin-bottom:2rem;">Gestion des collectes d'huiles usagées</p>
+    <button class="btn btn-blue mb12" onclick="showScreen('chauffeur-login')">Je suis chauffeur</button>
+    <button class="btn btn-outline" onclick="showScreen('admin-login')">Accès gestionnaire</button>
+  </div>
+</div>
+
+<!-- SCREEN: ADMIN LOGIN -->
+<div id="screen-admin-login" class="screen">
+  <div class="row mb16" style="margin-top:8px;">
+    <button class="back-btn" onclick="showScreen('home')">‹</button>
+    <h2>Accès gestionnaire</h2>
+  </div>
+  <div class="card" style="text-align:center; padding: 2rem;">
+    <div style="font-size:36px; margin-bottom:12px;">🔐</div>
+    <p style="color:#6b7280; margin-bottom:1rem;">Mot de passe gestionnaire</p>
+    <input type="password" id="admin-pwd" placeholder="Mot de passe" style="margin-bottom:8px;" onkeydown="if(event.key==='Enter') checkAdmin()" />
+    <p id="admin-error" style="color:#ef4444; font-size:12px; margin-bottom:8px; display:none;">Mot de passe incorrect</p>
+    <button class="btn btn-blue" onclick="checkAdmin()">Connexion</button>
+    <p style="font-size:11px; color:#9ca3af; margin-top:12px;">Mot de passe : easycollect2026</p>
+  </div>
+</div>
+
+<!-- SCREEN: ADMIN — liste chauffeurs -->
+<div id="screen-admin-list" class="screen">
+  <div class="row mb16" style="margin-top:8px;">
+    <button class="back-btn" onclick="showScreen('home')">‹</button>
+    <h2>Gestion des tournées</h2>
+  </div>
+  <div id="admin-chauffeurs-list"><div class="loading">Chargement...</div></div>
+</div>
+
+<!-- SCREEN: ADMIN — tournée d'un chauffeur -->
+<div id="screen-admin-tournee" class="screen">
+  <div class="row mb16" style="margin-top:8px;">
+    <button class="back-btn" onclick="showScreen('admin-list')">‹</button>
+    <div>
+      <p class="label mb4">Tournée de</p>
+      <h2 id="admin-tournee-nom"></h2>
+    </div>
+  </div>
+  <div id="admin-arrets-list"></div>
+  <button class="btn btn-outline" onclick="showAddClientModal()" style="margin-top:8px;">+ Ajouter un client</button>
+</div>
+
+<!-- SCREEN: CHAUFFEUR LOGIN -->
+<div id="screen-chauffeur-login" class="screen">
+  <div class="row mb16" style="margin-top:8px;">
+    <button class="back-btn" onclick="showScreen('home')">‹</button>
+    <div>
+      <h2>Qui êtes-vous ?</h2>
+      <p style="color:#6b7280; font-size:13px;">Sélectionnez votre nom</p>
+    </div>
+  </div>
+  <div id="chauffeurs-list"><div class="loading">Chargement...</div></div>
+</div>
+
+<!-- SCREEN: TOURNEE -->
+<div id="screen-tournee" class="screen">
+  <div class="row mb12" style="margin-top:8px;">
+    <button class="back-btn" onclick="showScreen('chauffeur-login')">‹</button>
+    <div style="flex:1;">
+      <h2 id="tournee-titre"></h2>
+      <p id="tournee-date" style="color:#6b7280; font-size:13px;"></p>
+    </div>
+  </div>
+  <div class="hero">
+    <div class="row-between">
+      <span id="hero-progress-text" style="font-size:13px; opacity:0.85;"></span>
+      <span id="hero-volume" style="font-size:13px; opacity:0.85;"></span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="hero-bar" style="width:0%"></div></div>
+  </div>
+  <div id="arrets-list"></div>
+</div>
+
+<!-- SCREEN: ARRET -->
+<div id="screen-arret" class="screen">
+  <div class="row mb12" style="margin-top:8px;">
+    <button class="back-btn" onclick="showScreen('tournee')">‹</button>
+    <div>
+      <p class="label mb4" id="arret-num"></p>
+      <h2 id="arret-nom"></h2>
+    </div>
+  </div>
+  <div id="arret-note-banner" style="display:none;" class="note-banner">
+    <p style="font-size:11px; font-weight:700; color:#92400e; margin-bottom:2px;">📌 NOTE DU GESTIONNAIRE</p>
+    <p id="arret-note-text" style="font-size:13px; color:#78350f;"></p>
+  </div>
+
+  <!-- Adresse -->
+  <div class="card mb12">
+    <p class="label mb8">Adresse</p>
+    <p id="arret-adresse" style="font-weight:600; margin-bottom:4px;"></p>
+    <p id="arret-cp-ville" style="color:#6b7280; margin-bottom:10px;"></p>
+    <p id="arret-bidons-place" style="color:#3b82f6; font-weight:700; font-size:13px; margin-bottom:10px;"></p>
+    <div class="grid2">
+      <button class="btn btn-waze" onclick="launchWaze()" style="border-radius:10px; padding:10px;">
+        ➤ Waze
+      </button>
+      <button class="btn btn-outline" onclick="toggleManuel()" style="border-radius:10px; padding:10px; font-size:13px;">Adresse manuelle</button>
+    </div>
+    <div id="manuel-input" style="display:none; margin-top:10px;">
+      <input id="manuel-adresse" placeholder="Entrez une adresse puis Entrée" onkeydown="if(event.key==='Enter') launchWazeManuel()" />
+      <p style="font-size:11px; color:#9ca3af; margin-top:4px;">Appuyez sur Entrée pour lancer Waze</p>
+    </div>
+  </div>
+
+  <!-- Bidons -->
+  <div class="card mb12">
+    <p class="label mb8">Bidons collectés <span style="color:#ef4444;">*</span></p>
+    <div id="bidons-list"></div>
+    <p class="label mb8" style="margin-top:4px;">Ajouter un bidon</p>
+    <div class="grid2">
+      <button onclick="addBidon('b60',60,'#3b82f6')" style="padding:10px; border-radius:10px; border:1.5px solid #93c5fd; background:#eff6ff; color:#1d4ed8; font-weight:700; cursor:pointer;">+ 60 L</button>
+      <button onclick="addBidon('b80',80,'#8b5cf6')" style="padding:10px; border-radius:10px; border:1.5px solid #c4b5fd; background:#f5f3ff; color:#5b21b6; font-weight:700; cursor:pointer;">+ 80 L (Poubelle)</button>
+      <button onclick="addBidon('b120',120,'#10b981')" style="padding:10px; border-radius:10px; border:1.5px solid #6ee7b7; background:#ecfdf5; color:#065f46; font-weight:700; cursor:pointer;">+ 120 L</button>
+      <button onclick="addBidon('b150',150,'#f59e0b')" style="padding:10px; border-radius:10px; border:1.5px solid #fcd34d; background:#fffbeb; color:#92400e; font-weight:700; cursor:pointer;">+ 150 L</button>
+    </div>
+  </div>
+
+  <!-- Photo -->
+  <div class="card mb12">
+    <p class="label mb8">Photo <span style="font-weight:400; text-transform:none; font-size:11px;">(optionnel)</span></p>
+    <div id="photo-preview" style="display:none; position:relative; margin-bottom:8px;">
+      <img id="photo-img" style="width:100%; border-radius:10px; max-height:180px; object-fit:cover;" />
+      <button onclick="removePhoto()" style="position:absolute; top:8px; right:8px; padding:4px 8px; border-radius:6px; border:none; background:rgba(0,0,0,0.5); color:#fff; font-size:12px; cursor:pointer;">✕</button>
+    </div>
+    <input type="file" id="photo-input" accept="image/*" capture="environment" onchange="handlePhoto(event)" style="display:none;" />
+    <button id="photo-btn" class="btn btn-outline" onclick="document.getElementById('photo-input').click()" style="font-size:13px;">📷 Prendre une photo</button>
+  </div>
+
+  <!-- Commentaire -->
+  <div class="card mb12">
+    <p class="label mb8">Commentaire <span style="font-weight:400; text-transform:none; font-size:11px;">(optionnel)</span></p>
+    <textarea id="arret-commentaire" placeholder="Remarque, problème..."></textarea>
+  </div>
+
+  <!-- Signature -->
+  <div class="card mb12" id="sig-card">
+    <p class="label mb8">Signature client <span style="color:#ef4444;">*</span></p>
+    <div id="sig-done" style="display:none;">
+      <img id="sig-img" style="height:60px; border:1px solid #e5e7eb; border-radius:8px; background:#fafafa;" />
+      <p id="sig-nom" style="font-size:12px; color:#059669; font-weight:600; margin-top:6px;"></p>
+      <button class="btn-sm" onclick="resetSignature()" style="margin-top:6px;">Modifier</button>
+    </div>
+    <button id="sig-btn" class="btn" style="background:#fef9c3; color:#92400e; border:1.5px solid #fde68a;" onclick="openSigModal()">✍️ Faire signer le client</button>
+  </div>
+
+  <div style="height:90px;"></div>
+  <div class="fixed-bottom">
+    <p id="validate-error" class="error-msg" style="display:none;"></p>
+    <button id="btn-valider" class="btn btn-gray" onclick="validerArret()">Valider — client suivant</button>
+  </div>
+</div>
+
+<!-- MODAL: Signature -->
+<div id="modal-sig" class="modal-overlay" style="display:none;">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 class="mb12">Signature du client</h3>
+    <p class="label mb4">Nom du signataire</p>
+    <input id="sig-signataire" placeholder="Prénom NOM" class="mb12" />
+    <p class="label mb4">Signature</p>
+    <canvas id="sig-canvas" class="sig-canvas"></canvas>
+    <div class="row" style="margin-top:12px; gap:8px;">
+      <button class="btn-sm" onclick="clearCanvas()">Effacer</button>
+      <button class="btn btn-outline" onclick="closeSigModal()" style="flex:1; padding:10px;">Annuler</button>
+      <button class="btn btn-blue" onclick="confirmSignature()" style="flex:2; padding:10px;">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Ajouter client (admin) -->
+<div id="modal-add-client" class="modal-overlay" style="display:none;">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 class="mb12">Ajouter un client</h3>
+    <p class="label mb4">Nom du restaurant</p>
+    <input id="new-client-nom" placeholder="Nom" class="mb8" />
+    <p class="label mb4">Adresse</p>
+    <input id="new-client-adresse" placeholder="Adresse" class="mb8" />
+    <div class="grid2 mb8">
+      <div><p class="label mb4">Code postal</p><input id="new-client-cp" placeholder="75001" /></div>
+      <div><p class="label mb4">Ville</p><input id="new-client-ville" placeholder="Paris" /></div>
+    </div>
+    <p class="label mb4">Bidons sur place</p>
+    <input id="new-client-bidons" type="number" min="0" value="1" class="mb8" />
+    <p class="label mb4">Note pour le chauffeur</p>
+    <textarea id="new-client-note" placeholder="Instructions..."></textarea>
+    <div class="row" style="margin-top:12px; gap:8px;">
+      <button class="btn btn-outline" onclick="closeAddClientModal()" style="flex:1; padding:10px;">Annuler</button>
+      <button class="btn btn-blue" onclick="saveNewClient()" style="flex:2; padding:10px;">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Edit client (admin) -->
+<div id="modal-edit-client" class="modal-overlay" style="display:none;">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 class="mb12">Modifier le client</h3>
+    <input id="edit-client-id" type="hidden" />
+    <p class="label mb4">Nom</p><input id="edit-client-nom" class="mb8" />
+    <p class="label mb4">Adresse</p><input id="edit-client-adresse" class="mb8" />
+    <div class="grid2 mb8">
+      <div><p class="label mb4">Code postal</p><input id="edit-client-cp" /></div>
+      <div><p class="label mb4">Ville</p><input id="edit-client-ville" /></div>
+    </div>
+    <p class="label mb4">Bidons sur place</p><input id="edit-client-bidons" type="number" min="0" class="mb8" />
+    <p class="label mb4">Note chauffeur</p><textarea id="edit-client-note" placeholder="Instructions..."></textarea>
+    <div class="row" style="margin-top:12px; gap:8px; justify-content:space-between;">
+      <button class="btn-sm btn-danger" onclick="deleteClientFromTournee()">Supprimer</button>
+      <div class="row gap8">
+        <button class="btn btn-outline" onclick="closeEditClientModal()" style="padding:10px 16px;">Annuler</button>
+        <button class="btn btn-blue" onclick="saveEditClient()" style="padding:10px 20px;">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://usjszwypepbtkmacblzk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzanN6d3lwZXBidGttYWNibHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODM3MTYsImV4cCI6MjA4OTM1OTcxNn0.--c_djVnUAAsJ-LC35xxBwF3xvHbp27TwLdMC9Pkn9Q';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const AVATAR_COLORS = ['#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444','#06b6d4'];
+const getColor = (str) => AVATAR_COLORS[str.charCodeAt(0) % AVATAR_COLORS.length];
+
+let state = {
+  chauffeurs: [],
+  currentChauffeur: null,
+  currentTournee: null,
+  arrets: [],
+  currentArretIdx: null,
+  bidons: [],
+  photoData: null,
+  signatureData: null,
+  signataireNom: '',
+  adminSelectedChauffeur: null,
+  sigDrawn: false
+};
+
+// ─── NAVIGATION ───────────────────────────────────────────────
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+  if (name === 'chauffeur-login' || name === 'admin-list') loadChauffeurs();
+}
+
+// ─── SUPABASE ─────────────────────────────────────────────────
+async function loadChauffeurs() {
+  const { data } = await sb.from('chauffeurs').select('*').order('nom');
+  state.chauffeurs = data || [];
+  renderChauffeursList();
+  if (document.getElementById('screen-admin-list').classList.contains('active')) renderAdminList();
+}
+
+async function loadOrCreateTournee(chauffeurId) {
+  const today = new Date().toISOString().split('T')[0];
+  let { data: tournee } = await sb.from('tournees').select('*').eq('chauffeur_id', chauffeurId).eq('date', today).single();
+  if (!tournee) {
+    const { data: newT } = await sb.from('tournees').insert({ chauffeur_id: chauffeurId, date: today }).select().single();
+    tournee = newT;
+  }
+  state.currentTournee = tournee;
+  await loadArrets(tournee.id);
+}
+
+async function loadArrets(tourneeId) {
+  const { data } = await sb.from('arrets')
+    .select('*, clients(*), bidons_collectes(*)')
+    .eq('tournee_id', tourneeId)
+    .order('ordre');
+  state.arrets = data || [];
+  renderTournee();
+}
+
+async function getOrCreateArret(tourneeId, clientId, ordre) {
+  let { data } = await sb.from('arrets').select('*, clients(*), bidons_collectes(*)')
+    .eq('tournee_id', tourneeId).eq('client_id', clientId).single();
+  if (!data) {
+    const { data: newA } = await sb.from('arrets').insert({ tournee_id: tourneeId, client_id: clientId, ordre }).select('*, clients(*), bidons_collectes(*)').single();
+    data = newA;
+  }
+  return data;
+}
+
+// ─── CHAUFFEUR LOGIN ──────────────────────────────────────────
+function renderChauffeursList() {
+  const el = document.getElementById('chauffeurs-list');
+  if (!state.chauffeurs.length) { el.innerHTML = '<div class="loading">Aucun chauffeur trouvé</div>'; return; }
+  el.innerHTML = state.chauffeurs.map(c => `
+    <div class="card row" style="cursor:pointer;" onclick="selectChauffeur('${c.id}')">
+      <div class="avatar" style="background:${getColor(c.avatar)}22; color:${getColor(c.avatar)};">${c.avatar}</div>
+      <div style="flex:1;">
+        <p style="font-weight:700;">${c.nom}</p>
+        <p style="color:#6b7280; font-size:13px;">Voir ma tournée du jour</p>
+      </div>
+      <span class="chevron">›</span>
+    </div>
+  `).join('');
+}
+
+async function selectChauffeur(id) {
+  state.currentChauffeur = state.chauffeurs.find(c => c.id === id);
+  await loadOrCreateTournee(id);
+  showScreen('tournee');
+}
+
+// ─── TOURNEE ──────────────────────────────────────────────────
+function renderTournee() {
+  const c = state.currentChauffeur;
+  const arrets = state.arrets;
+  document.getElementById('tournee-titre').textContent = `Bonjour, ${c.nom.split(' ')[0]} 👋`;
+  document.getElementById('tournee-date').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  const done = arrets.filter(a => a.statut === 'valide').length;
+  const total = arrets.length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  const vol = arrets.filter(a => a.statut === 'valide').reduce((acc, a) => acc + (a.bidons_collectes || []).reduce((s, b) => s + Math.round(b.volume * b.niveau), 0), 0);
+
+  document.getElementById('hero-progress-text').textContent = `${done}/${total} validés`;
+  document.getElementById('hero-volume').textContent = vol > 0 ? `${vol} L collectés` : '';
+  document.getElementById('hero-bar').style.width = pct + '%';
+
+  const activeIdx = arrets.findIndex(a => a.statut !== 'valide');
+
+  const el = document.getElementById('arrets-list');
+  if (!arrets.length) { el.innerHTML = '<div class="loading">Aucun arrêt pour aujourd\'hui.<br>Contactez votre gestionnaire.</div>'; return; }
+
+  el.innerHTML = arrets.map((a, i) => {
+    const isActive = i === activeIdx;
+    const isDone = a.statut === 'valide';
+    const isLocked = !isDone && !isActive;
+    const numBg = isDone ? '#d1fae5' : isActive ? '#dbeafe' : '#f3f4f6';
+    const numColor = isDone ? '#059669' : isActive ? '#2563eb' : '#9ca3af';
+    const numLabel = isDone ? '✓' : isLocked ? '🔒' : i + 1;
+    const border = isActive ? 'border:2px solid #3b82f6;' : '';
+    const opacity = isLocked ? 'opacity:0.4;' : '';
+    const note = a.clients?.note ? `<p style="font-size:11px; color:#f59e0b; font-style:italic; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">📌 ${a.clients.note}</p>` : '';
+    const badge = isActive ? '<span class="badge badge-blue">En cours</span>' : isDone ? '<span class="badge badge-green">Validé</span>' : '';
+    return `
+      <div class="card row" style="${border}${opacity}cursor:${isLocked ? 'default' : 'pointer'};" onclick="${isLocked ? '' : `openArret(${i})`}">
+        <div class="circle-num" style="background:${numBg}; color:${numColor};">${numLabel}</div>
+        <div style="flex:1; min-width:0;">
+          <p style="font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${a.clients?.nom || ''}</p>
+          <p style="color:#6b7280; font-size:12px;">${a.clients?.cp || ''} ${a.clients?.ville || ''}</p>
+          ${note}
+        </div>
+        ${badge}
+      </div>
+    `;
+  }).join('');
+
+  if (done === total && total > 0) {
+    el.innerHTML += `<div style="text-align:center; padding:1.5rem; background:#d1fae5; border-radius:14px; margin-top:8px;">
+      <div style="font-size:28px; margin-bottom:6px;">🎉</div>
+      <p style="font-weight:800; color:#059669; font-size:16px;">Tournée terminée !</p>
+      <p style="color:#059669; font-size:13px; margin-top:4px;">Total : ${vol} L collectés</p>
+    </div>`;
+  }
+}
+
+// ─── ARRET ────────────────────────────────────────────────────
+async function openArret(idx) {
+  const a = state.arrets[idx];
+  if (!a) return;
+  state.currentArretIdx = idx;
+  state.bidons = a.bidons_collectes ? [...a.bidons_collectes] : [];
+  state.photoData = null;
+  state.signatureData = a.signature_url || null;
+  state.signataireNom = a.signataire || '';
+
+  const total = state.arrets.length;
+  document.getElementById('arret-num').textContent = `ARRÊT ${idx + 1} / ${total}`;
+  document.getElementById('arret-nom').textContent = a.clients?.nom || '';
+  document.getElementById('arret-adresse').textContent = a.clients?.adresse || '';
+  document.getElementById('arret-cp-ville').textContent = `${a.clients?.cp || ''} ${a.clients?.ville || ''}`;
+  const bp = a.clients?.bidons_place || 0;
+  document.getElementById('arret-bidons-place').textContent = bp > 0 ? `🛢 ${bp} bidon${bp > 1 ? 's' : ''} sur place` : '';
+  const note = a.clients?.note;
+  if (note) { document.getElementById('arret-note-banner').style.display = 'block'; document.getElementById('arret-note-text').textContent = note; }
+  else document.getElementById('arret-note-banner').style.display = 'none';
+  document.getElementById('arret-commentaire').value = a.commentaire || '';
+
+  renderBidons();
+  renderSigState();
+  updateValidateBtn();
+  showScreen('arret');
+}
+
+function launchWaze() {
+  const a = state.arrets[state.currentArretIdx];
+  const q = encodeURIComponent(`${a.clients.adresse} ${a.clients.cp} ${a.clients.ville}`);
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  iframe.src = `waze://?q=${q}&navigate=yes`;
+  setTimeout(() => { document.body.removeChild(iframe); window.open(`https://waze.com/ul?q=${q}&navigate=yes`, '_blank'); }, 1500);
+}
+
+function toggleManuel() {
+  const el = document.getElementById('manuel-input');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function launchWazeManuel() {
+  const q = encodeURIComponent(document.getElementById('manuel-adresse').value);
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  iframe.src = `waze://?q=${q}&navigate=yes`;
+  setTimeout(() => { document.body.removeChild(iframe); window.open(`https://waze.com/ul?q=${q}&navigate=yes`, '_blank'); }, 1500);
+}
+
+// ─── BIDONS ───────────────────────────────────────────────────
+const BIDON_COLORS = { b60: '#3b82f6', b80: '#8b5cf6', b120: '#10b981', b150: '#f59e0b' };
+const BIDON_LABELS = { b60: '60 L', b80: '80 L (Poubelle)', b120: '120 L', b150: '150 L' };
+const NIVEAUX = [{ val: 0, label: '0' }, { val: 0.25, label: '¼' }, { val: 0.5, label: '½' }, { val: 0.75, label: '¾' }, { val: 1, label: 'Full' }];
+
+function addBidon(typeId, volume, color) {
+  state.bidons.push({ id: Date.now(), type_id: typeId, volume, niveau: null });
+  renderBidons(); updateValidateBtn();
+}
+
+function removeBidon(idx) { state.bidons.splice(idx, 1); renderBidons(); updateValidateBtn(); }
+
+function setNiveau(idx, val) { state.bidons[idx].niveau = val; renderBidons(); updateValidateBtn(); }
+
+function renderBidons() {
+  const el = document.getElementById('bidons-list');
+  if (!state.bidons.length) { el.innerHTML = ''; return; }
+  el.innerHTML = state.bidons.map((b, i) => {
+    const color = BIDON_COLORS[b.type_id] || '#6b7280';
+    const label = BIDON_LABELS[b.type_id] || b.volume + ' L';
+    const niveauxHTML = NIVEAUX.map(n => {
+      const active = b.niveau === n.val;
+      return `<button class="niveau-btn ${active ? 'active' : ''}" style="${active ? `background:${color};` : ''}" onclick="setNiveau(${i}, ${n.val})">${n.label}</button>`;
+    }).join('');
+    const volReel = b.niveau !== null ? Math.round(b.volume * b.niveau) : '—';
+    return `
+      <div style="background:#f8fafc; border:1.5px solid ${color}44; border-radius:12px; padding:12px 14px; margin-bottom:10px;">
+        <div class="row-between mb8">
+          <div class="row gap8"><div style="width:10px;height:10px;border-radius:50%;background:${color};"></div><span style="font-weight:700;">${label}</span></div>
+          <button class="btn-sm btn-danger" onclick="removeBidon(${i})">Retirer</button>
+        </div>
+        <p class="label mb4">Niveau de remplissage</p>
+        <div class="grid5">${niveauxHTML}</div>
+        ${b.niveau !== null ? `<p style="font-size:12px;color:${color};font-weight:700;margin-top:8px;">Volume : ${volReel} L (${Math.round(b.niveau*100)}%)</p>` : ''}
+      </div>`;
+  }).join('');
+}
+
+// ─── PHOTO ────────────────────────────────────────────────────
+function handlePhoto(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    state.photoData = ev.target.result;
+    document.getElementById('photo-img').src = ev.target.result;
+    document.getElementById('photo-preview').style.display = 'block';
+    document.getElementById('photo-btn').style.display = 'none';
+  };
+  r.readAsDataURL(f);
+}
+function removePhoto() {
+  state.photoData = null;
+  document.getElementById('photo-preview').style.display = 'none';
+  document.getElementById('photo-btn').style.display = 'block';
+}
+
+// ─── SIGNATURE ────────────────────────────────────────────────
+let sigCtx, sigDrawing = false;
+function openSigModal() {
+  document.getElementById('modal-sig').style.display = 'flex';
+  setTimeout(() => {
+    const canvas = document.getElementById('sig-canvas');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 130;
+    sigCtx = canvas.getContext('2d');
+    state.sigDrawn = false;
+    const getPos = (e, c) => { const r = c.getBoundingClientRect(); const s = e.touches ? e.touches[0] : e; return { x: (s.clientX - r.left) * (c.width / r.width), y: (s.clientY - r.top) * (c.height / r.height) }; };
+    canvas.onmousedown = canvas.ontouchstart = (e) => { e.preventDefault(); sigDrawing = true; const p = getPos(e, canvas); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y); };
+    canvas.onmousemove = canvas.ontouchmove = (e) => { e.preventDefault(); if (!sigDrawing) return; const p = getPos(e, canvas); sigCtx.lineWidth = 2.5; sigCtx.lineCap = 'round'; sigCtx.strokeStyle = '#1a1a1a'; sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); state.sigDrawn = true; };
+    canvas.onmouseup = canvas.ontouchend = (e) => { e.preventDefault(); sigDrawing = false; };
+  }, 100);
+}
+function clearCanvas() { const c = document.getElementById('sig-canvas'); c.getContext('2d').clearRect(0, 0, c.width, c.height); state.sigDrawn = false; }
+function closeSigModal() { document.getElementById('modal-sig').style.display = 'none'; }
+function confirmSignature() {
+  if (!state.sigDrawn || !document.getElementById('sig-signataire').value.trim()) { alert('Veuillez dessiner la signature et entrer un nom.'); return; }
+  state.signatureData = document.getElementById('sig-canvas').toDataURL();
+  state.signataireNom = document.getElementById('sig-signataire').value.trim();
+  closeSigModal();
+  renderSigState();
+  updateValidateBtn();
+}
+function resetSignature() { state.signatureData = null; state.signataireNom = ''; renderSigState(); updateValidateBtn(); }
+function renderSigState() {
+  const done = !!state.signatureData;
+  document.getElementById('sig-done').style.display = done ? 'block' : 'none';
+  document.getElementById('sig-btn').style.display = done ? 'none' : 'block';
+  if (done) { document.getElementById('sig-img').src = state.signatureData; document.getElementById('sig-nom').textContent = `Signé par ${state.signataireNom}`; }
+}
+
+// ─── VALIDATION ───────────────────────────────────────────────
+function updateValidateBtn() {
+  const canVal = state.bidons.length > 0 && state.bidons.every(b => b.niveau !== null) && state.signatureData;
+  const btn = document.getElementById('btn-valider');
+  const err = document.getElementById('validate-error');
+  btn.className = 'btn ' + (canVal ? 'btn-green' : 'btn-gray');
+  if (!canVal) {
+    if (!state.bidons.length) err.textContent = 'Ajoutez au moins un bidon';
+    else if (state.bidons.some(b => b.niveau === null)) err.textContent = 'Renseignez le niveau de tous les bidons';
+    else err.textContent = 'La signature du client est obligatoire';
+    err.style.display = 'block';
+  } else { err.style.display = 'none'; }
+}
+
+async function validerArret() {
+  if (!state.bidons.length || state.bidons.some(b => b.niveau === null) || !state.signatureData) return;
+  const a = state.arrets[state.currentArretIdx];
+  const heure = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  await sb.from('arrets').update({
+    statut: 'valide', commentaire: document.getElementById('arret-commentaire').value,
+    signataire: state.signataireNom, signature_url: state.signatureData,
+    photo_url: state.photoData || '', heure_validation: heure
+  }).eq('id', a.id);
+  await sb.from('bidons_collectes').delete().eq('arret_id', a.id);
+  if (state.bidons.length > 0) {
+    await sb.from('bidons_collectes').insert(state.bidons.map(b => ({ arret_id: a.id, type_id: b.type_id, volume: b.volume, niveau: b.niveau })));
+  }
+  await loadArrets(state.currentTournee.id);
+  showScreen('tournee');
+}
+
+// ─── ADMIN ────────────────────────────────────────────────────
+function checkAdmin() {
+  const pwd = document.getElementById('admin-pwd').value;
+  if (pwd === 'easycollect2026') { document.getElementById('admin-error').style.display = 'none'; document.getElementById('admin-pwd').value = ''; showScreen('admin-list'); }
+  else { document.getElementById('admin-error').style.display = 'block'; }
+}
+
+function renderAdminList() {
+  const el = document.getElementById('admin-chauffeurs-list');
+  el.innerHTML = state.chauffeurs.map(c => `
+    <div class="card row" style="cursor:pointer;" onclick="openAdminTournee('${c.id}')">
+      <div class="avatar" style="background:${getColor(c.avatar)}22; color:${getColor(c.avatar)};">${c.avatar}</div>
+      <div style="flex:1;"><p style="font-weight:700;">${c.nom}</p></div>
+      <span class="chevron">›</span>
+    </div>
+  `).join('');
+}
+
+async function openAdminTournee(chauffeurId) {
+  state.adminSelectedChauffeur = state.chauffeurs.find(c => c.id === chauffeurId);
+  document.getElementById('admin-tournee-nom').textContent = state.adminSelectedChauffeur.nom;
+  const today = new Date().toISOString().split('T')[0];
+  let { data: tournee } = await sb.from('tournees').select('*').eq('chauffeur_id', chauffeurId).eq('date', today).single();
+  if (!tournee) {
+    const { data: newT } = await sb.from('tournees').insert({ chauffeur_id: chauffeurId, date: today }).select().single();
+    tournee = newT;
+  }
+  state.currentTournee = tournee;
+  await loadAdminArrets(tournee.id);
+  showScreen('admin-tournee');
+}
+
+async function loadAdminArrets(tourneeId) {
+  const { data } = await sb.from('arrets').select('*, clients(*)').eq('tournee_id', tourneeId).order('ordre');
+  state.arrets = data || [];
+  renderAdminArrets();
+}
+
+function renderAdminArrets() {
+  const el = document.getElementById('admin-arrets-list');
+  if (!state.arrets.length) { el.innerHTML = '<div class="loading">Aucun arrêt. Ajoutez des clients ci-dessous.</div>'; return; }
+  el.innerHTML = state.arrets.map((a, i) => {
+    const note = a.clients?.note ? `<p style="font-size:11px; color:#f59e0b; font-style:italic; margin-top:2px;">📌 ${a.clients.note}</p>` : '';
+    const badge = a.statut === 'valide' ? '<span class="badge badge-green">Validé</span>' : '<span class="badge badge-gray">En attente</span>';
+    return `
+      <div class="card" style="margin-bottom:8px;">
+        <div class="row-between mb4">
+          <div class="row gap8">
+            <div class="circle-num" style="background:#f3f4f6; color:#6b7280;">${i + 1}</div>
+            <div style="flex:1; min-width:0;">
+              <p style="font-weight:700;">${a.clients?.nom || ''}</p>
+              <p style="color:#6b7280; font-size:12px;">${a.clients?.cp || ''} ${a.clients?.ville || ''} · ${a.clients?.bidons_place || 0} bidon(s)</p>
+              ${note}
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+            ${badge}
+            ${a.statut !== 'valide' ? `<button class="btn-sm" onclick="openEditClient('${a.id}', '${a.clients?.id}')">✎</button>` : ''}
+          </div>
+        </div>
+        ${a.statut !== 'valide' ? `
+        <div class="row" style="gap:6px; margin-top:8px; border-top:1px solid #f3f4f6; padding-top:8px;">
+          <button class="btn-sm" onclick="moveArret(${i},-1)" ${i === 0 ? 'disabled style="opacity:0.3"' : ''}>↑</button>
+          <button class="btn-sm" onclick="moveArret(${i},1)" ${i === state.arrets.length - 1 ? 'disabled style="opacity:0.3"' : ''}>↓</button>
+        </div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+async function moveArret(idx, dir) {
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= state.arrets.length) return;
+  const a = state.arrets[idx], b = state.arrets[newIdx];
+  await sb.from('arrets').update({ ordre: newIdx }).eq('id', a.id);
+  await sb.from('arrets').update({ ordre: idx }).eq('id', b.id);
+  await loadAdminArrets(state.currentTournee.id);
+}
+
+function openEditClient(arretId, clientId) {
+  const a = state.arrets.find(x => x.id === arretId);
+  if (!a) return;
+  document.getElementById('edit-client-id').value = arretId;
+  document.getElementById('edit-client-nom').value = a.clients?.nom || '';
+  document.getElementById('edit-client-adresse').value = a.clients?.adresse || '';
+  document.getElementById('edit-client-cp').value = a.clients?.cp || '';
+  document.getElementById('edit-client-ville').value = a.clients?.ville || '';
+  document.getElementById('edit-client-bidons').value = a.clients?.bidons_place || 0;
+  document.getElementById('edit-client-note').value = a.clients?.note || '';
+  document.getElementById('modal-edit-client').style.display = 'flex';
+}
+
+async function saveEditClient() {
+  const arretId = document.getElementById('edit-client-id').value;
+  const a = state.arrets.find(x => x.id === arretId);
+  await sb.from('clients').update({
+    nom: document.getElementById('edit-client-nom').value,
+    adresse: document.getElementById('edit-client-adresse').value,
+    cp: document.getElementById('edit-client-cp').value,
+    ville: document.getElementById('edit-client-ville').value,
+    bidons_place: +document.getElementById('edit-client-bidons').value,
+    note: document.getElementById('edit-client-note').value
+  }).eq('id', a.clients.id);
+  closeEditClientModal();
+  await loadAdminArrets(state.currentTournee.id);
+}
+
+async function deleteClientFromTournee() {
+  const arretId = document.getElementById('edit-client-id').value;
+  await sb.from('arrets').delete().eq('id', arretId);
+  closeEditClientModal();
+  await loadAdminArrets(state.currentTournee.id);
+}
+
+function closeEditClientModal() { document.getElementById('modal-edit-client').style.display = 'none'; }
+
+function showAddClientModal() { document.getElementById('modal-add-client').style.display = 'flex'; }
+function closeAddClientModal() { document.getElementById('modal-add-client').style.display = 'none'; }
+
+async function saveNewClient() {
+  const nom = document.getElementById('new-client-nom').value.trim();
+  if (!nom) return;
+  const { data: client } = await sb.from('clients').insert({
+    nom, adresse: document.getElementById('new-client-adresse').value,
+    cp: document.getElementById('new-client-cp').value,
+    ville: document.getElementById('new-client-ville').value,
+    bidons_place: +document.getElementById('new-client-bidons').value,
+    note: document.getElementById('new-client-note').value
+  }).select().single();
+  const ordre = state.arrets.length;
+  await sb.from('arrets').insert({ tournee_id: state.currentTournee.id, client_id: client.id, ordre });
+  closeAddClientModal();
+  document.getElementById('new-client-nom').value = '';
+  document.getElementById('new-client-adresse').value = '';
+  document.getElementById('new-client-cp').value = '';
+  document.getElementById('new-client-ville').value = '';
+  document.getElementById('new-client-bidons').value = '1';
+  document.getElementById('new-client-note').value = '';
+  await loadAdminArrets(state.currentTournee.id);
+}
+</script>
+</body>
+</html>
