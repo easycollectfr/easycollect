@@ -23,7 +23,7 @@
     .btn-waze { background: #33ccff; color: #fff; font-weight: 700; }
     .btn-sm { padding: 6px 12px; font-size: 13px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; font-weight: 600; }
     .btn-danger { color: #ef4444; border-color: #fca5a5; background: #fef2f2; }
-    input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; background: #fff; }
+    input, textarea { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; background: #fff; }
     input:focus, textarea:focus { border-color: #3b82f6; }
     textarea { resize: vertical; min-height: 70px; }
     .label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
@@ -41,7 +41,6 @@
     .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
     .niveau-btn { padding: 8px 4px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; }
-    .niveau-btn.active { color: #fff; border-color: transparent; }
     .note-banner { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; }
     .fixed-bottom { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem; background: #fff; border-top: 1px solid #e5e7eb; z-index: 50; }
     .error-msg { font-size: 12px; color: #ef4444; text-align: center; margin-bottom: 8px; }
@@ -61,7 +60,6 @@
 </head>
 <body>
 
-<!-- SCREEN: HOME (gestionnaire uniquement) -->
 <div id="screen-home" class="screen active">
   <div style="text-align:center; padding: 3rem 1rem 2rem;">
     <div style="font-size:48px; margin-bottom:12px;">🚚</div>
@@ -71,30 +69,27 @@
   </div>
 </div>
 
-<!-- SCREEN: CHAUFFEUR (chargement auto via URL) -->
 <div id="screen-chauffeur-loading" class="screen">
-  <div class="loading" style="padding-top: 5rem;">
-    <div style="font-size:36px; margin-bottom:12px;">🚚</div>
+  <div class="loading" style="padding-top:5rem;">
+    <div style="font-size:36px;margin-bottom:12px;">🚚</div>
     <p>Chargement de votre tournée...</p>
   </div>
 </div>
 
-<!-- SCREEN: ADMIN LOGIN -->
 <div id="screen-admin-login" class="screen">
   <div class="row mb16" style="margin-top:8px;">
     <button class="back-btn" onclick="showScreen('home')">‹</button>
     <h2>Accès gestionnaire</h2>
   </div>
-  <div class="card" style="text-align:center; padding: 2rem;">
-    <div style="font-size:36px; margin-bottom:12px;">🔐</div>
-    <p style="color:#6b7280; margin-bottom:1rem;">Mot de passe gestionnaire</p>
+  <div class="card" style="text-align:center; padding:2rem;">
+    <div style="font-size:36px;margin-bottom:12px;">🔐</div>
+    <p style="color:#6b7280;margin-bottom:1rem;">Mot de passe gestionnaire</p>
     <input type="password" id="admin-pwd" placeholder="Mot de passe" style="margin-bottom:8px;" onkeydown="if(event.key==='Enter') checkAdmin()" />
-    <p id="admin-error" style="color:#ef4444; font-size:12px; margin-bottom:8px; display:none;">Mot de passe incorrect</p>
+    <p id="admin-error" style="color:#ef4444;font-size:12px;margin-bottom:8px;display:none;">Mot de passe incorrect</p>
     <button class="btn btn-blue" onclick="checkAdmin()">Connexion</button>
   </div>
 </div>
 
-<!-- SCREEN: ADMIN liste chauffeurs -->
 <div id="screen-admin-list" class="screen">
   <div class="row mb16" style="margin-top:8px;">
     <button class="back-btn" onclick="showScreen('home')">‹</button>
@@ -103,7 +98,6 @@
   <div id="admin-chauffeurs-list"><div class="loading">Chargement...</div></div>
 </div>
 
-<!-- SCREEN: ADMIN tournée -->
 <div id="screen-admin-tournee" class="screen">
   <div class="row mb16" style="margin-top:8px;">
     <button class="back-btn" onclick="showScreen('admin-list')">‹</button>
@@ -112,30 +106,28 @@
       <h2 id="admin-tournee-nom"></h2>
     </div>
   </div>
-  <div id="admin-lien-chauffeur" class="card" style="background:#f0fdf4; border:1px solid #86efac; margin-bottom:14px;"></div>
+  <div id="admin-lien-chauffeur" class="card" style="background:#f0fdf4;border:1px solid #86efac;margin-bottom:14px;"></div>
   <div id="admin-arrets-list"></div>
   <button class="btn btn-outline" onclick="showAddClientModal()" style="margin-top:8px;">+ Ajouter un client</button>
 </div>
 
-<!-- SCREEN: TOURNEE chauffeur -->
 <div id="screen-tournee" class="screen">
   <div class="row mb12" style="margin-top:8px;">
     <div style="flex:1;">
       <h2 id="tournee-titre"></h2>
-      <p id="tournee-date" style="color:#6b7280; font-size:13px;"></p>
+      <p id="tournee-date" style="color:#6b7280;font-size:13px;"></p>
     </div>
   </div>
   <div class="hero">
     <div class="row-between">
-      <span id="hero-progress-text" style="font-size:13px; opacity:0.85;"></span>
-      <span id="hero-volume" style="font-size:13px; opacity:0.85;"></span>
+      <span id="hero-progress-text" style="font-size:13px;opacity:0.85;"></span>
+      <span id="hero-volume" style="font-size:13px;opacity:0.85;"></span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="hero-bar" style="width:0%"></div></div>
   </div>
   <div id="arrets-list"></div>
 </div>
 
-<!-- SCREEN: ARRET -->
 <div id="screen-arret" class="screen">
   <div class="row mb12" style="margin-top:8px;">
     <button class="back-btn" onclick="showScreen('tournee')">‹</button>
@@ -145,21 +137,20 @@
     </div>
   </div>
   <div id="arret-note-banner" style="display:none;" class="note-banner">
-    <p style="font-size:11px; font-weight:700; color:#92400e; margin-bottom:2px;">📌 NOTE DU GESTIONNAIRE</p>
-    <p id="arret-note-text" style="font-size:13px; color:#78350f;"></p>
+    <p style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:2px;">📌 NOTE DU GESTIONNAIRE</p>
+    <p id="arret-note-text" style="font-size:13px;color:#78350f;"></p>
   </div>
   <div class="card mb12">
     <p class="label mb8">Adresse</p>
-    <p id="arret-adresse" style="font-weight:600; margin-bottom:4px;"></p>
-    <p id="arret-cp-ville" style="color:#6b7280; margin-bottom:10px;"></p>
-    <p id="arret-bidons-place" style="color:#3b82f6; font-weight:700; font-size:13px; margin-bottom:10px;"></p>
+    <p id="arret-adresse" style="font-weight:600;margin-bottom:4px;"></p>
+    <p id="arret-cp-ville" style="color:#6b7280;margin-bottom:10px;"></p>
+    <p id="arret-bidons-place" style="color:#3b82f6;font-weight:700;font-size:13px;margin-bottom:10px;"></p>
     <div class="grid2">
-      <button class="btn btn-waze" onclick="launchWaze()" style="border-radius:10px; padding:10px;">➤ Waze</button>
-      <button class="btn btn-outline" onclick="toggleManuel()" style="border-radius:10px; padding:10px; font-size:13px;">Adresse manuelle</button>
+      <button class="btn btn-waze" onclick="launchWaze()" style="border-radius:10px;padding:10px;">➤ Waze</button>
+      <button class="btn btn-outline" onclick="toggleManuel()" style="border-radius:10px;padding:10px;font-size:13px;">Adresse manuelle</button>
     </div>
-    <div id="manuel-input" style="display:none; margin-top:10px;">
+    <div id="manuel-input" style="display:none;margin-top:10px;">
       <input id="manuel-adresse" placeholder="Entrez une adresse puis Entrée" onkeydown="if(event.key==='Enter') launchWazeManuel()" />
-      <p style="font-size:11px; color:#9ca3af; margin-top:4px;">Appuyez sur Entrée pour lancer Waze</p>
     </div>
   </div>
   <div class="card mb12">
@@ -167,33 +158,33 @@
     <div id="bidons-list"></div>
     <p class="label mb8" style="margin-top:4px;">Ajouter un bidon</p>
     <div class="grid2">
-      <button onclick="addBidon('b60',60,'#3b82f6')" style="padding:10px; border-radius:10px; border:1.5px solid #93c5fd; background:#eff6ff; color:#1d4ed8; font-weight:700; cursor:pointer;">+ 60 L</button>
-      <button onclick="addBidon('b80',80,'#8b5cf6')" style="padding:10px; border-radius:10px; border:1.5px solid #c4b5fd; background:#f5f3ff; color:#5b21b6; font-weight:700; cursor:pointer;">+ 80 L (Poubelle)</button>
-      <button onclick="addBidon('b120',120,'#10b981')" style="padding:10px; border-radius:10px; border:1.5px solid #6ee7b7; background:#ecfdf5; color:#065f46; font-weight:700; cursor:pointer;">+ 120 L</button>
-      <button onclick="addBidon('b150',150,'#f59e0b')" style="padding:10px; border-radius:10px; border:1.5px solid #fcd34d; background:#fffbeb; color:#92400e; font-weight:700; cursor:pointer;">+ 150 L</button>
+      <button onclick="addBidon('b60',60,'#3b82f6')" style="padding:10px;border-radius:10px;border:1.5px solid #93c5fd;background:#eff6ff;color:#1d4ed8;font-weight:700;cursor:pointer;">+ 60 L</button>
+      <button onclick="addBidon('b80',80,'#8b5cf6')" style="padding:10px;border-radius:10px;border:1.5px solid #c4b5fd;background:#f5f3ff;color:#5b21b6;font-weight:700;cursor:pointer;">+ 80 L (Poubelle)</button>
+      <button onclick="addBidon('b120',120,'#10b981')" style="padding:10px;border-radius:10px;border:1.5px solid #6ee7b7;background:#ecfdf5;color:#065f46;font-weight:700;cursor:pointer;">+ 120 L</button>
+      <button onclick="addBidon('b150',150,'#f59e0b')" style="padding:10px;border-radius:10px;border:1.5px solid #fcd34d;background:#fffbeb;color:#92400e;font-weight:700;cursor:pointer;">+ 150 L</button>
     </div>
   </div>
   <div class="card mb12">
-    <p class="label mb8">Photo <span style="font-weight:400; text-transform:none; font-size:11px;">(optionnel)</span></p>
-    <div id="photo-preview" style="display:none; position:relative; margin-bottom:8px;">
-      <img id="photo-img" style="width:100%; border-radius:10px; max-height:180px; object-fit:cover;" />
-      <button onclick="removePhoto()" style="position:absolute; top:8px; right:8px; padding:4px 8px; border-radius:6px; border:none; background:rgba(0,0,0,0.5); color:#fff; font-size:12px; cursor:pointer;">✕</button>
+    <p class="label mb8">Photo <span style="font-weight:400;text-transform:none;font-size:11px;">(optionnel)</span></p>
+    <div id="photo-preview" style="display:none;position:relative;margin-bottom:8px;">
+      <img id="photo-img" style="width:100%;border-radius:10px;max-height:180px;object-fit:cover;" />
+      <button onclick="removePhoto()" style="position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;cursor:pointer;">✕</button>
     </div>
     <input type="file" id="photo-input" accept="image/*" capture="environment" onchange="handlePhoto(event)" style="display:none;" />
     <button id="photo-btn" class="btn btn-outline" onclick="document.getElementById('photo-input').click()" style="font-size:13px;">📷 Prendre une photo</button>
   </div>
   <div class="card mb12">
-    <p class="label mb8">Commentaire <span style="font-weight:400; text-transform:none; font-size:11px;">(optionnel)</span></p>
+    <p class="label mb8">Commentaire <span style="font-weight:400;text-transform:none;font-size:11px;">(optionnel)</span></p>
     <textarea id="arret-commentaire" placeholder="Remarque, problème..."></textarea>
   </div>
-  <div class="card mb12" id="sig-card">
+  <div class="card mb12">
     <p class="label mb8">Signature client <span style="color:#ef4444;">*</span></p>
     <div id="sig-done" style="display:none;">
-      <img id="sig-img" style="height:60px; border:1px solid #e5e7eb; border-radius:8px; background:#fafafa;" />
-      <p id="sig-nom" style="font-size:12px; color:#059669; font-weight:600; margin-top:6px;"></p>
+      <img id="sig-img" style="height:60px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;" />
+      <p id="sig-nom" style="font-size:12px;color:#059669;font-weight:600;margin-top:6px;"></p>
       <button class="btn-sm" onclick="resetSignature()" style="margin-top:6px;">Modifier</button>
     </div>
-    <button id="sig-btn" class="btn" style="background:#fef9c3; color:#92400e; border:1.5px solid #fde68a;" onclick="openSigModal()">✍️ Faire signer le client</button>
+    <button id="sig-btn" class="btn" style="background:#fef9c3;color:#92400e;border:1.5px solid #fde68a;" onclick="openSigModal()">✍️ Faire signer le client</button>
   </div>
   <div style="height:90px;"></div>
   <div class="fixed-bottom">
@@ -202,7 +193,6 @@
   </div>
 </div>
 
-<!-- MODAL: Signature -->
 <div id="modal-sig" class="modal-overlay" style="display:none;">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -211,40 +201,39 @@
     <input id="sig-signataire" placeholder="Prénom NOM" class="mb12" />
     <p class="label mb4">Signature</p>
     <canvas id="sig-canvas" class="sig-canvas"></canvas>
-    <div class="row" style="margin-top:12px; gap:8px;">
+    <div class="row" style="margin-top:12px;gap:8px;">
       <button class="btn-sm" onclick="clearCanvas()">Effacer</button>
-      <button class="btn btn-outline" onclick="closeSigModal()" style="flex:1; padding:10px;">Annuler</button>
-      <button class="btn btn-blue" onclick="confirmSignature()" style="flex:2; padding:10px;">Confirmer</button>
+      <button class="btn btn-outline" onclick="closeSigModal()" style="flex:1;padding:10px;">Annuler</button>
+      <button class="btn btn-blue" onclick="confirmSignature()" style="flex:2;padding:10px;">Confirmer</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL: Ajouter client -->
 <div id="modal-add-client" class="modal-overlay" style="display:none;">
   <div class="modal">
     <div class="modal-handle"></div>
     <h3 class="mb12">Ajouter un client</h3>
-    <p class="label mb4">Nom du restaurant</p><input id="new-client-nom" placeholder="Nom" class="mb8" />
+    <p class="label mb4">Nom</p><input id="new-client-nom" placeholder="Nom du restaurant" class="mb8" />
     <p class="label mb4">Adresse</p><input id="new-client-adresse" placeholder="Adresse" class="mb8" />
     <div class="grid2 mb8">
       <div><p class="label mb4">Code postal</p><input id="new-client-cp" placeholder="75001" /></div>
       <div><p class="label mb4">Ville</p><input id="new-client-ville" placeholder="Paris" /></div>
     </div>
     <p class="label mb4">Bidons sur place</p><input id="new-client-bidons" type="number" min="0" value="1" class="mb8" />
-    <p class="label mb4">Note pour le chauffeur</p><textarea id="new-client-note" placeholder="Instructions..."></textarea>
-    <div class="row" style="margin-top:12px; gap:8px;">
-      <button class="btn btn-outline" onclick="closeAddClientModal()" style="flex:1; padding:10px;">Annuler</button>
-      <button class="btn btn-blue" onclick="saveNewClient()" style="flex:2; padding:10px;">Ajouter</button>
+    <p class="label mb4">Note chauffeur</p><textarea id="new-client-note" placeholder="Instructions..."></textarea>
+    <div class="row" style="margin-top:12px;gap:8px;">
+      <button class="btn btn-outline" onclick="closeAddClientModal()" style="flex:1;padding:10px;">Annuler</button>
+      <button class="btn btn-blue" onclick="saveNewClient()" style="flex:2;padding:10px;">Ajouter</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL: Edit client -->
 <div id="modal-edit-client" class="modal-overlay" style="display:none;">
   <div class="modal">
     <div class="modal-handle"></div>
     <h3 class="mb12">Modifier le client</h3>
     <input id="edit-client-id" type="hidden" />
+    <input id="edit-client-client-id" type="hidden" />
     <p class="label mb4">Nom</p><input id="edit-client-nom" class="mb8" />
     <p class="label mb4">Adresse</p><input id="edit-client-adresse" class="mb8" />
     <div class="grid2 mb8">
@@ -253,7 +242,7 @@
     </div>
     <p class="label mb4">Bidons sur place</p><input id="edit-client-bidons" type="number" min="0" class="mb8" />
     <p class="label mb4">Note chauffeur</p><textarea id="edit-client-note" placeholder="Instructions..."></textarea>
-    <div class="row" style="margin-top:12px; gap:8px; justify-content:space-between;">
+    <div class="row" style="margin-top:12px;gap:8px;justify-content:space-between;">
       <button class="btn-sm btn-danger" onclick="deleteClientFromTournee()">Supprimer</button>
       <div class="row gap8">
         <button class="btn btn-outline" onclick="closeEditClientModal()" style="padding:10px 16px;">Annuler</button>
@@ -266,12 +255,8 @@
 <script>
 const SUPABASE_URL = 'https://usjszwypepbtkmacblzk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzanN6d3lwZXBidGttYWNibHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODM3MTYsImV4cCI6MjA4OTM1OTcxNn0.--c_djVnUAAsJ-LC35xxBwF3xvHbp27TwLdMC9Pkn9Q';
-
-// Debug log
-console.log('EasyCollect chargé, URL params:', window.location.search);
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Chauffeurs avec leurs slugs URL
 const CHAUFFEURS_CONFIG = {
   'adam':    { nom: 'Adam',    avatar: 'AD' },
   'michael': { nom: 'Michael', avatar: 'MI' },
@@ -280,45 +265,46 @@ const CHAUFFEURS_CONFIG = {
   'denis':   { nom: 'Denis',   avatar: 'DE' },
 };
 
-const AVATAR_COLORS = ['#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444'];
-const getColor = (slug) => { const keys = Object.keys(CHAUFFEURS_CONFIG); return AVATAR_COLORS[keys.indexOf(slug) % AVATAR_COLORS.length]; };
+const COLORS = ['#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444'];
+const getColor = (slug) => COLORS[Object.keys(CHAUFFEURS_CONFIG).indexOf(slug) % COLORS.length];
 
 let state = {
-  chauffeurs: [],
-  currentChauffeur: null,
-  currentChauffeurSlug: null,
-  currentTournee: null,
-  arrets: [],
-  currentArretIdx: null,
-  bidons: [],
-  photoData: null,
-  signatureData: null,
-  signataireNom: '',
-  adminSelectedChauffeur: null,
-  sigDrawn: false
+  chauffeurs: [], currentChauffeur: null, currentTournee: null,
+  arrets: [], currentArretIdx: null, bidons: [],
+  photoData: null, signatureData: null, signataireNom: '',
+  adminSelectedChauffeur: null, sigDrawn: false
 };
 
-// ─── INIT — détection URL ─────────────────────────────────────
+function getTodayStr() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
 window.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('c')?.toLowerCase();
+  console.log('Slug détecté:', slug);
+  console.log('Date aujourd hui:', getTodayStr());
 
   if (slug && CHAUFFEURS_CONFIG[slug]) {
-    // Lien chauffeur direct
     showScreen('chauffeur-loading');
-    await loadChauffeurs();
+    const { data: chauffeurs } = await sb.from('chauffeurs').select('*');
+    console.log('Chauffeurs:', chauffeurs);
+    state.chauffeurs = chauffeurs || [];
     const cfg = CHAUFFEURS_CONFIG[slug];
     const chauffeur = state.chauffeurs.find(c => c.nom.toLowerCase() === cfg.nom.toLowerCase());
+    console.log('Chauffeur trouvé:', chauffeur);
     if (chauffeur) {
       state.currentChauffeur = chauffeur;
-      state.currentChauffeurSlug = slug;
-      await loadOrCreateTournee(chauffeur.id);
-      showScreen('tournee');
+      await loadTournee(chauffeur.id);
     } else {
+      alert('Chauffeur introuvable');
       showScreen('home');
     }
   } else {
-    // Page gestionnaire
     showScreen('home');
   }
 });
@@ -330,111 +316,104 @@ function showScreen(name) {
   if (name === 'admin-list') renderAdminList();
 }
 
-// ─── SUPABASE ─────────────────────────────────────────────────
-async function loadChauffeurs() {
-  const { data } = await sb.from('chauffeurs').select('*').order('nom');
-  state.chauffeurs = data || [];
-}
+async function loadTournee(chauffeurId) {
+  const today = getTodayStr();
+  console.log('Recherche tournée pour chauffeur', chauffeurId, 'date', today);
+  const { data: tournees, error } = await sb.from('tournees').select('*').eq('chauffeur_id', chauffeurId).eq('date', today);
+  console.log('Tournées trouvées:', tournees, 'Erreur:', error);
 
-async function loadOrCreateTournee(chauffeurId) {
-  const today = new Date().toISOString().split('T')[0];
-  let { data: tournee } = await sb.from('tournees').select('*').eq('chauffeur_id', chauffeurId).eq('date', today).single();
+  let tournee = tournees && tournees.length > 0 ? tournees[0] : null;
+
   if (!tournee) {
+    console.log('Pas de tournée, création...');
     const { data: newT } = await sb.from('tournees').insert({ chauffeur_id: chauffeurId, date: today }).select().single();
     tournee = newT;
+    console.log('Nouvelle tournée:', newT);
   }
+
   state.currentTournee = tournee;
   await loadArrets(tournee.id);
+  showScreen('tournee');
 }
 
 async function loadArrets(tourneeId) {
-  const { data } = await sb.from('arrets')
+  console.log('Chargement arrêts pour tournée', tourneeId);
+  const { data, error } = await sb.from('arrets')
     .select('*, clients(*), bidons_collectes(*)')
     .eq('tournee_id', tourneeId)
     .order('ordre');
+  console.log('Arrêts:', data, 'Erreur:', error);
   state.arrets = data || [];
   renderTournee();
 }
 
-// ─── TOURNEE ──────────────────────────────────────────────────
 function renderTournee() {
   const c = state.currentChauffeur;
   const arrets = state.arrets;
   document.getElementById('tournee-titre').textContent = `Bonjour, ${c.nom} 👋`;
-  document.getElementById('tournee-date').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-
+  document.getElementById('tournee-date').textContent = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' });
   const done = arrets.filter(a => a.statut === 'valide').length;
   const total = arrets.length;
-  const pct = total ? Math.round(done / total * 100) : 0;
-  const vol = arrets.filter(a => a.statut === 'valide').reduce((acc, a) => acc + (a.bidons_collectes || []).reduce((s, b) => s + Math.round(b.volume * b.niveau), 0), 0);
-
+  const pct = total ? Math.round(done/total*100) : 0;
+  const vol = arrets.filter(a => a.statut === 'valide').reduce((acc,a) => acc + (a.bidons_collectes||[]).reduce((s,b) => s + Math.round(b.volume*b.niveau),0), 0);
   document.getElementById('hero-progress-text').textContent = `${done}/${total} validés`;
   document.getElementById('hero-volume').textContent = vol > 0 ? `${vol} L collectés` : '';
   document.getElementById('hero-bar').style.width = pct + '%';
-
   const activeIdx = arrets.findIndex(a => a.statut !== 'valide');
   const el = document.getElementById('arrets-list');
 
   if (!arrets.length) {
-    el.innerHTML = `<div class="card" style="text-align:center; padding:2rem; color:#6b7280;">
-      <div style="font-size:32px; margin-bottom:8px;">📋</div>
+    el.innerHTML = `<div class="card" style="text-align:center;padding:2rem;color:#6b7280;">
+      <div style="font-size:32px;margin-bottom:8px;">📋</div>
       <p style="font-weight:700;">Aucun arrêt pour aujourd'hui</p>
-      <p style="font-size:13px; margin-top:4px;">Contactez votre gestionnaire</p>
+      <p style="font-size:13px;margin-top:4px;">Contactez votre gestionnaire</p>
     </div>`;
     return;
   }
 
-  el.innerHTML = arrets.map((a, i) => {
-    const isActive = i === activeIdx;
-    const isDone = a.statut === 'valide';
-    const isLocked = !isDone && !isActive;
+  el.innerHTML = arrets.map((a,i) => {
+    const isActive = i === activeIdx, isDone = a.statut === 'valide', isLocked = !isDone && !isActive;
     const numBg = isDone ? '#d1fae5' : isActive ? '#dbeafe' : '#f3f4f6';
     const numColor = isDone ? '#059669' : isActive ? '#2563eb' : '#9ca3af';
-    const numLabel = isDone ? '✓' : isLocked ? '🔒' : i + 1;
-    const border = isActive ? 'border:2px solid #3b82f6;' : '';
-    const opacity = isLocked ? 'opacity:0.4;' : '';
-    const note = a.clients?.note ? `<p style="font-size:11px; color:#f59e0b; font-style:italic; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">📌 ${a.clients.note}</p>` : '';
+    const numLabel = isDone ? '✓' : isLocked ? '🔒' : i+1;
+    const note = a.clients?.note ? `<p style="font-size:11px;color:#f59e0b;font-style:italic;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">📌 ${a.clients.note}</p>` : '';
     const badge = isActive ? '<span class="badge badge-blue">En cours</span>' : isDone ? '<span class="badge badge-green">Validé</span>' : '';
-    return `
-      <div class="card row" style="${border}${opacity}cursor:${isLocked ? 'default' : 'pointer'};" onclick="${isLocked ? '' : `openArret(${i})`}">
-        <div class="circle-num" style="background:${numBg}; color:${numColor};">${numLabel}</div>
-        <div style="flex:1; min-width:0;">
-          <p style="font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${a.clients?.nom || ''}</p>
-          <p style="color:#6b7280; font-size:12px;">${a.clients?.cp || ''} ${a.clients?.ville || ''}</p>
-          ${note}
-        </div>
-        ${badge}
-      </div>`;
+    return `<div class="card row" style="${isActive?'border:2px solid #3b82f6;':''}${isLocked?'opacity:0.4;':''}cursor:${isLocked?'default':'pointer'};" onclick="${isLocked?'':` openArret(${i})`}">
+      <div class="circle-num" style="background:${numBg};color:${numColor};">${numLabel}</div>
+      <div style="flex:1;min-width:0;">
+        <p style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.clients?.nom||''}</p>
+        <p style="color:#6b7280;font-size:12px;">${a.clients?.cp||''} ${a.clients?.ville||''}</p>
+        ${note}
+      </div>
+      ${badge}
+    </div>`;
   }).join('');
 
   if (done === total && total > 0) {
-    el.innerHTML += `<div style="text-align:center; padding:1.5rem; background:#d1fae5; border-radius:14px; margin-top:8px;">
-      <div style="font-size:28px; margin-bottom:6px;">🎉</div>
-      <p style="font-weight:800; color:#059669; font-size:16px;">Tournée terminée !</p>
-      <p style="color:#059669; font-size:13px; margin-top:4px;">Total : ${vol} L collectés</p>
+    el.innerHTML += `<div style="text-align:center;padding:1.5rem;background:#d1fae5;border-radius:14px;margin-top:8px;">
+      <div style="font-size:28px;margin-bottom:6px;">🎉</div>
+      <p style="font-weight:800;color:#059669;font-size:16px;">Tournée terminée !</p>
+      <p style="color:#059669;font-size:13px;margin-top:4px;">Total : ${vol} L collectés</p>
     </div>`;
   }
 }
 
-// ─── ARRET ────────────────────────────────────────────────────
 async function openArret(idx) {
-  const a = state.arrets[idx];
-  if (!a) return;
+  const a = state.arrets[idx]; if (!a) return;
   state.currentArretIdx = idx;
   state.bidons = a.bidons_collectes ? [...a.bidons_collectes] : [];
   state.photoData = null;
   state.signatureData = a.signature_url || null;
   state.signataireNom = a.signataire || '';
-
-  document.getElementById('arret-num').textContent = `ARRÊT ${idx + 1} / ${state.arrets.length}`;
+  document.getElementById('arret-num').textContent = `ARRÊT ${idx+1} / ${state.arrets.length}`;
   document.getElementById('arret-nom').textContent = a.clients?.nom || '';
   document.getElementById('arret-adresse').textContent = a.clients?.adresse || '';
-  document.getElementById('arret-cp-ville').textContent = `${a.clients?.cp || ''} ${a.clients?.ville || ''}`;
+  document.getElementById('arret-cp-ville').textContent = `${a.clients?.cp||''} ${a.clients?.ville||''}`;
   const bp = a.clients?.bidons_place || 0;
-  document.getElementById('arret-bidons-place').textContent = bp > 0 ? `🛢 ${bp} bidon${bp > 1 ? 's' : ''} sur place` : '';
+  document.getElementById('arret-bidons-place').textContent = bp > 0 ? `🛢 ${bp} bidon${bp>1?'s':''} sur place` : '';
   const note = a.clients?.note;
-  if (note) { document.getElementById('arret-note-banner').style.display = 'block'; document.getElementById('arret-note-text').textContent = note; }
-  else document.getElementById('arret-note-banner').style.display = 'none';
+  document.getElementById('arret-note-banner').style.display = note ? 'block' : 'none';
+  if (note) document.getElementById('arret-note-text').textContent = note;
   document.getElementById('arret-commentaire').value = a.commentaire || '';
   renderBidons(); renderSigState(); updateValidateBtn();
   showScreen('arret');
@@ -443,186 +422,164 @@ async function openArret(idx) {
 function launchWaze() {
   const a = state.arrets[state.currentArretIdx];
   const q = encodeURIComponent(`${a.clients.adresse} ${a.clients.cp} ${a.clients.ville}`);
-  const iframe = document.createElement('iframe'); iframe.style.display = 'none'; document.body.appendChild(iframe);
+  const iframe = document.createElement('iframe'); iframe.style.display='none'; document.body.appendChild(iframe);
   iframe.src = `waze://?q=${q}&navigate=yes`;
   setTimeout(() => { document.body.removeChild(iframe); window.open(`https://waze.com/ul?q=${q}&navigate=yes`, '_blank'); }, 1500);
 }
-function toggleManuel() { const el = document.getElementById('manuel-input'); el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
+function toggleManuel() { const el = document.getElementById('manuel-input'); el.style.display = el.style.display==='none'?'block':'none'; }
 function launchWazeManuel() {
   const q = encodeURIComponent(document.getElementById('manuel-adresse').value);
-  const iframe = document.createElement('iframe'); iframe.style.display = 'none'; document.body.appendChild(iframe);
+  const iframe = document.createElement('iframe'); iframe.style.display='none'; document.body.appendChild(iframe);
   iframe.src = `waze://?q=${q}&navigate=yes`;
   setTimeout(() => { document.body.removeChild(iframe); window.open(`https://waze.com/ul?q=${q}&navigate=yes`, '_blank'); }, 1500);
 }
 
-// ─── BIDONS ───────────────────────────────────────────────────
-const BIDON_COLORS = { b60:'#3b82f6', b80:'#8b5cf6', b120:'#10b981', b150:'#f59e0b' };
-const BIDON_LABELS = { b60:'60 L', b80:'80 L (Poubelle)', b120:'120 L', b150:'150 L' };
+const BIDON_COLORS = {b60:'#3b82f6',b80:'#8b5cf6',b120:'#10b981',b150:'#f59e0b'};
+const BIDON_LABELS = {b60:'60 L',b80:'80 L (Poubelle)',b120:'120 L',b150:'150 L'};
 const NIVEAUX = [{val:0,label:'0'},{val:0.25,label:'¼'},{val:0.5,label:'½'},{val:0.75,label:'¾'},{val:1,label:'Full'}];
 
-function addBidon(typeId, volume) { state.bidons.push({ id: Date.now(), type_id: typeId, volume, niveau: null }); renderBidons(); updateValidateBtn(); }
-function removeBidon(idx) { state.bidons.splice(idx, 1); renderBidons(); updateValidateBtn(); }
-function setNiveau(idx, val) { state.bidons[idx].niveau = val; renderBidons(); updateValidateBtn(); }
+function addBidon(typeId, volume) { state.bidons.push({id:Date.now(),type_id:typeId,volume,niveau:null}); renderBidons(); updateValidateBtn(); }
+function removeBidon(idx) { state.bidons.splice(idx,1); renderBidons(); updateValidateBtn(); }
+function setNiveau(idx,val) { state.bidons[idx].niveau=val; renderBidons(); updateValidateBtn(); }
 
 function renderBidons() {
   const el = document.getElementById('bidons-list');
-  if (!state.bidons.length) { el.innerHTML = ''; return; }
-  el.innerHTML = state.bidons.map((b, i) => {
-    const color = BIDON_COLORS[b.type_id] || '#6b7280';
-    const label = BIDON_LABELS[b.type_id] || b.volume + ' L';
-    const niveauxHTML = NIVEAUX.map(n => {
-      const active = b.niveau === n.val;
-      return `<button class="niveau-btn ${active ? 'active' : ''}" style="${active ? `background:${color};` : ''}" onclick="setNiveau(${i},${n.val})">${n.label}</button>`;
-    }).join('');
-    const volReel = b.niveau !== null ? Math.round(b.volume * b.niveau) : '—';
-    return `<div style="background:#f8fafc; border:1.5px solid ${color}44; border-radius:12px; padding:12px 14px; margin-bottom:10px;">
+  if (!state.bidons.length) { el.innerHTML=''; return; }
+  el.innerHTML = state.bidons.map((b,i) => {
+    const color = BIDON_COLORS[b.type_id]||'#6b7280', label = BIDON_LABELS[b.type_id]||b.volume+' L';
+    const niveauxHTML = NIVEAUX.map(n => `<button class="niveau-btn ${b.niveau===n.val?'active':''}" style="${b.niveau===n.val?`background:${color};`:''}" onclick="setNiveau(${i},${n.val})">${n.label}</button>`).join('');
+    return `<div style="background:#f8fafc;border:1.5px solid ${color}44;border-radius:12px;padding:12px 14px;margin-bottom:10px;">
       <div class="row-between mb8">
         <div class="row gap8"><div style="width:10px;height:10px;border-radius:50%;background:${color};"></div><span style="font-weight:700;">${label}</span></div>
         <button class="btn-sm btn-danger" onclick="removeBidon(${i})">Retirer</button>
       </div>
       <p class="label mb4">Niveau de remplissage</p>
       <div class="grid5">${niveauxHTML}</div>
-      ${b.niveau !== null ? `<p style="font-size:12px;color:${color};font-weight:700;margin-top:8px;">Volume : ${volReel} L (${Math.round(b.niveau*100)}%)</p>` : ''}
+      ${b.niveau!==null?`<p style="font-size:12px;color:${color};font-weight:700;margin-top:8px;">Volume : ${Math.round(b.volume*b.niveau)} L (${Math.round(b.niveau*100)}%)</p>`:''}
     </div>`;
   }).join('');
 }
 
-// ─── PHOTO ────────────────────────────────────────────────────
 function handlePhoto(e) {
-  const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => { state.photoData = ev.target.result; document.getElementById('photo-img').src = ev.target.result; document.getElementById('photo-preview').style.display = 'block'; document.getElementById('photo-btn').style.display = 'none'; };
-  r.readAsDataURL(f);
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader(); r.onload=ev=>{state.photoData=ev.target.result;document.getElementById('photo-img').src=ev.target.result;document.getElementById('photo-preview').style.display='block';document.getElementById('photo-btn').style.display='none';}; r.readAsDataURL(f);
 }
-function removePhoto() { state.photoData = null; document.getElementById('photo-preview').style.display = 'none'; document.getElementById('photo-btn').style.display = 'block'; }
+function removePhoto() { state.photoData=null; document.getElementById('photo-preview').style.display='none'; document.getElementById('photo-btn').style.display='block'; }
 
-// ─── SIGNATURE ────────────────────────────────────────────────
-let sigDrawing = false;
+let sigDrawing=false;
 function openSigModal() {
-  document.getElementById('modal-sig').style.display = 'flex';
-  setTimeout(() => {
-    const canvas = document.getElementById('sig-canvas');
-    canvas.width = canvas.offsetWidth; canvas.height = 130;
-    const ctx = canvas.getContext('2d');
-    state.sigDrawn = false;
-    const getPos = (e, c) => { const r = c.getBoundingClientRect(); const s = e.touches ? e.touches[0] : e; return { x: (s.clientX-r.left)*(c.width/r.width), y: (s.clientY-r.top)*(c.height/r.height) }; };
-    canvas.onmousedown = canvas.ontouchstart = (e) => { e.preventDefault(); sigDrawing = true; const p = getPos(e, canvas); ctx.beginPath(); ctx.moveTo(p.x, p.y); };
-    canvas.onmousemove = canvas.ontouchmove = (e) => { e.preventDefault(); if (!sigDrawing) return; const p = getPos(e, canvas); ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.strokeStyle='#1a1a1a'; ctx.lineTo(p.x,p.y); ctx.stroke(); state.sigDrawn=true; };
-    canvas.onmouseup = canvas.ontouchend = (e) => { e.preventDefault(); sigDrawing=false; };
-  }, 100);
+  document.getElementById('modal-sig').style.display='flex';
+  setTimeout(()=>{
+    const canvas=document.getElementById('sig-canvas'); canvas.width=canvas.offsetWidth; canvas.height=130;
+    const ctx=canvas.getContext('2d'); state.sigDrawn=false;
+    const getPos=(e,c)=>{const r=c.getBoundingClientRect(),s=e.touches?e.touches[0]:e;return{x:(s.clientX-r.left)*(c.width/r.width),y:(s.clientY-r.top)*(c.height/r.height)};};
+    canvas.onmousedown=canvas.ontouchstart=(e)=>{e.preventDefault();sigDrawing=true;const p=getPos(e,canvas);ctx.beginPath();ctx.moveTo(p.x,p.y);};
+    canvas.onmousemove=canvas.ontouchmove=(e)=>{e.preventDefault();if(!sigDrawing)return;const p=getPos(e,canvas);ctx.lineWidth=2.5;ctx.lineCap='round';ctx.strokeStyle='#1a1a1a';ctx.lineTo(p.x,p.y);ctx.stroke();state.sigDrawn=true;};
+    canvas.onmouseup=canvas.ontouchend=(e)=>{e.preventDefault();sigDrawing=false;};
+  },100);
 }
-function clearCanvas() { const c = document.getElementById('sig-canvas'); c.getContext('2d').clearRect(0,0,c.width,c.height); state.sigDrawn=false; }
-function closeSigModal() { document.getElementById('modal-sig').style.display='none'; }
-function confirmSignature() {
-  if (!state.sigDrawn || !document.getElementById('sig-signataire').value.trim()) { alert('Veuillez dessiner la signature et entrer un nom.'); return; }
-  state.signatureData = document.getElementById('sig-canvas').toDataURL();
-  state.signataireNom = document.getElementById('sig-signataire').value.trim();
-  closeSigModal(); renderSigState(); updateValidateBtn();
+function clearCanvas(){const c=document.getElementById('sig-canvas');c.getContext('2d').clearRect(0,0,c.width,c.height);state.sigDrawn=false;}
+function closeSigModal(){document.getElementById('modal-sig').style.display='none';}
+function confirmSignature(){
+  if(!state.sigDrawn||!document.getElementById('sig-signataire').value.trim()){alert('Veuillez dessiner la signature et entrer un nom.');return;}
+  state.signatureData=document.getElementById('sig-canvas').toDataURL();
+  state.signataireNom=document.getElementById('sig-signataire').value.trim();
+  closeSigModal();renderSigState();updateValidateBtn();
 }
-function resetSignature() { state.signatureData=null; state.signataireNom=''; renderSigState(); updateValidateBtn(); }
-function renderSigState() {
-  const done = !!state.signatureData;
-  document.getElementById('sig-done').style.display = done ? 'block' : 'none';
-  document.getElementById('sig-btn').style.display = done ? 'none' : 'block';
-  if (done) { document.getElementById('sig-img').src=state.signatureData; document.getElementById('sig-nom').textContent=`Signé par ${state.signataireNom}`; }
+function resetSignature(){state.signatureData=null;state.signataireNom='';renderSigState();updateValidateBtn();}
+function renderSigState(){
+  const done=!!state.signatureData;
+  document.getElementById('sig-done').style.display=done?'block':'none';
+  document.getElementById('sig-btn').style.display=done?'none':'block';
+  if(done){document.getElementById('sig-img').src=state.signatureData;document.getElementById('sig-nom').textContent=`Signé par ${state.signataireNom}`;}
 }
 
-// ─── VALIDATION ───────────────────────────────────────────────
-function updateValidateBtn() {
-  const canVal = state.bidons.length > 0 && state.bidons.every(b => b.niveau !== null) && state.signatureData;
-  document.getElementById('btn-valider').className = 'btn ' + (canVal ? 'btn-green' : 'btn-gray');
-  const err = document.getElementById('validate-error');
-  if (!canVal) {
-    err.textContent = !state.bidons.length ? 'Ajoutez au moins un bidon' : state.bidons.some(b=>b.niveau===null) ? 'Renseignez le niveau de tous les bidons' : 'La signature du client est obligatoire';
-    err.style.display = 'block';
-  } else err.style.display = 'none';
+function updateValidateBtn(){
+  const canVal=state.bidons.length>0&&state.bidons.every(b=>b.niveau!==null)&&state.signatureData;
+  document.getElementById('btn-valider').className='btn '+(canVal?'btn-green':'btn-gray');
+  const err=document.getElementById('validate-error');
+  if(!canVal){err.textContent=!state.bidons.length?'Ajoutez au moins un bidon':state.bidons.some(b=>b.niveau===null)?'Renseignez le niveau de tous les bidons':'La signature du client est obligatoire';err.style.display='block';}
+  else err.style.display='none';
 }
 
-async function validerArret() {
-  if (!state.bidons.length || state.bidons.some(b=>b.niveau===null) || !state.signatureData) return;
-  const a = state.arrets[state.currentArretIdx];
-  const heure = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  await sb.from('arrets').update({ statut:'valide', commentaire:document.getElementById('arret-commentaire').value, signataire:state.signataireNom, signature_url:state.signatureData, photo_url:state.photoData||'', heure_validation:heure }).eq('id',a.id);
+async function validerArret(){
+  if(!state.bidons.length||state.bidons.some(b=>b.niveau===null)||!state.signatureData)return;
+  const a=state.arrets[state.currentArretIdx];
+  const heure=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  await sb.from('arrets').update({statut:'valide',commentaire:document.getElementById('arret-commentaire').value,signataire:state.signataireNom,signature_url:state.signatureData,photo_url:state.photoData||'',heure_validation:heure}).eq('id',a.id);
   await sb.from('bidons_collectes').delete().eq('arret_id',a.id);
-  if (state.bidons.length > 0) await sb.from('bidons_collectes').insert(state.bidons.map(b=>({arret_id:a.id,type_id:b.type_id,volume:b.volume,niveau:b.niveau})));
+  if(state.bidons.length>0) await sb.from('bidons_collectes').insert(state.bidons.map(b=>({arret_id:a.id,type_id:b.type_id,volume:b.volume,niveau:b.niveau})));
   await loadArrets(state.currentTournee.id);
   showScreen('tournee');
 }
 
-// ─── ADMIN ────────────────────────────────────────────────────
-function checkAdmin() {
-  if (document.getElementById('admin-pwd').value === 'Denismarvin77&') {
+function checkAdmin(){
+  if(document.getElementById('admin-pwd').value==='Denismarvin77&'){
     document.getElementById('admin-error').style.display='none';
     document.getElementById('admin-pwd').value='';
-    loadChauffeurs().then(() => showScreen('admin-list'));
+    sb.from('chauffeurs').select('*').then(({data})=>{state.chauffeurs=data||[];showScreen('admin-list');});
   } else document.getElementById('admin-error').style.display='block';
 }
 
-function renderAdminList() {
-  const el = document.getElementById('admin-chauffeurs-list');
-  const baseUrl = window.location.origin + window.location.pathname;
-  el.innerHTML = Object.entries(CHAUFFEURS_CONFIG).map(([slug, cfg]) => {
-    const lien = `${baseUrl}?c=${slug}`;
+function renderAdminList(){
+  const el=document.getElementById('admin-chauffeurs-list');
+  const baseUrl=window.location.origin+window.location.pathname;
+  el.innerHTML=Object.entries(CHAUFFEURS_CONFIG).map(([slug,cfg])=>{
+    const lien=`${baseUrl}?c=${slug}`;
     return `<div class="card" style="cursor:pointer;" onclick="openAdminTournee('${slug}')">
       <div class="row-between">
         <div class="row gap8">
-          <div class="avatar" style="background:${getColor(slug)}22; color:${getColor(slug)};">${cfg.avatar}</div>
-          <div>
-            <p style="font-weight:700;">${cfg.nom}</p>
-            <p style="color:#6b7280; font-size:12px;">Voir / modifier la tournée</p>
-          </div>
+          <div class="avatar" style="background:${getColor(slug)}22;color:${getColor(slug)};">${cfg.avatar}</div>
+          <div><p style="font-weight:700;">${cfg.nom}</p><p style="color:#6b7280;font-size:12px;">Voir / modifier la tournée</p></div>
         </div>
         <span class="chevron">›</span>
       </div>
-      <div style="margin-top:10px; background:#f8fafc; border-radius:8px; padding:8px 10px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
-        <p style="font-size:11px; color:#6b7280; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${lien}</p>
-        <button class="btn-sm" onclick="event.stopPropagation(); copyLink('${lien}')">Copier</button>
+      <div style="margin-top:10px;background:#f8fafc;border-radius:8px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <p style="font-size:11px;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${lien}</p>
+        <button class="btn-sm" onclick="event.stopPropagation();copyLink('${lien}')">Copier</button>
       </div>
     </div>`;
   }).join('');
 }
 
-function copyLink(url) {
-  navigator.clipboard.writeText(url).then(() => alert('Lien copié ! Envoyez-le à votre chauffeur par WhatsApp.'));
-}
+function copyLink(url){navigator.clipboard.writeText(url).then(()=>alert('Lien copié ! Envoyez-le par WhatsApp.'));}
 
-async function openAdminTournee(slug) {
-  const cfg = CHAUFFEURS_CONFIG[slug];
-  await loadChauffeurs();
-  const chauffeur = state.chauffeurs.find(c => c.nom.toLowerCase() === cfg.nom.toLowerCase());
-  if (!chauffeur) { alert('Chauffeur introuvable. Ajoutez-le dans Supabase.'); return; }
-  state.adminSelectedChauffeur = chauffeur;
-  document.getElementById('admin-tournee-nom').textContent = cfg.nom;
-
-  const baseUrl = window.location.origin + window.location.pathname;
-  const lien = `${baseUrl}?c=${slug}`;
-  document.getElementById('admin-lien-chauffeur').innerHTML = `
+async function openAdminTournee(slug){
+  const cfg=CHAUFFEURS_CONFIG[slug];
+  const {data:chauffeurs}=await sb.from('chauffeurs').select('*');
+  state.chauffeurs=chauffeurs||[];
+  const chauffeur=state.chauffeurs.find(c=>c.nom.toLowerCase()===cfg.nom.toLowerCase());
+  if(!chauffeur){alert('Chauffeur introuvable.');return;}
+  state.adminSelectedChauffeur=chauffeur;
+  document.getElementById('admin-tournee-nom').textContent=cfg.nom;
+  const baseUrl=window.location.origin+window.location.pathname;
+  const lien=`${baseUrl}?c=${slug}`;
+  document.getElementById('admin-lien-chauffeur').innerHTML=`
     <div class="row-between">
-      <p style="font-size:12px; color:#166534; font-weight:600;">🔗 Lien de ${cfg.nom}</p>
+      <p style="font-size:12px;color:#166534;font-weight:600;">🔗 Lien de ${cfg.nom}</p>
       <button class="btn-sm" onclick="copyLink('${lien}')">Copier</button>
     </div>
-    <p style="font-size:11px; color:#166534; margin-top:4px; word-break:break-all;">${lien}</p>`;
-
-  const today = new Date().toISOString().split('T')[0];
-  let { data: tournee } = await sb.from('tournees').select('*').eq('chauffeur_id', chauffeur.id).eq('date', today).single();
-  if (!tournee) { const { data: newT } = await sb.from('tournees').insert({ chauffeur_id: chauffeur.id, date: today }).select().single(); tournee = newT; }
-  state.currentTournee = tournee;
+    <p style="font-size:11px;color:#166534;margin-top:4px;word-break:break-all;">${lien}</p>`;
+  const today=getTodayStr();
+  const {data:tournees}=await sb.from('tournees').select('*').eq('chauffeur_id',chauffeur.id).eq('date',today);
+  let tournee=tournees&&tournees.length>0?tournees[0]:null;
+  if(!tournee){const {data:newT}=await sb.from('tournees').insert({chauffeur_id:chauffeur.id,date:today}).select().single();tournee=newT;}
+  state.currentTournee=tournee;
   await loadAdminArrets(tournee.id);
   showScreen('admin-tournee');
 }
 
-async function loadAdminArrets(tourneeId) {
-  const { data } = await sb.from('arrets').select('*, clients(*)').eq('tournee_id', tourneeId).order('ordre');
-  state.arrets = data || [];
-  renderAdminArrets();
+async function loadAdminArrets(tourneeId){
+  const {data}=await sb.from('arrets').select('*, clients(*)').eq('tournee_id',tourneeId).order('ordre');
+  state.arrets=data||[];renderAdminArrets();
 }
 
-function renderAdminArrets() {
-  const el = document.getElementById('admin-arrets-list');
-  if (!state.arrets.length) { el.innerHTML='<div class="loading">Aucun arrêt. Ajoutez des clients ci-dessous.</div>'; return; }
-  el.innerHTML = state.arrets.map((a,i) => {
-    const note = a.clients?.note ? `<p style="font-size:11px;color:#f59e0b;font-style:italic;margin-top:2px;">📌 ${a.clients.note}</p>` : '';
-    const badge = a.statut==='valide' ? '<span class="badge badge-green">Validé</span>' : '<span class="badge badge-gray">En attente</span>';
+function renderAdminArrets(){
+  const el=document.getElementById('admin-arrets-list');
+  if(!state.arrets.length){el.innerHTML='<div class="loading">Aucun arrêt. Ajoutez des clients ci-dessous.</div>';return;}
+  el.innerHTML=state.arrets.map((a,i)=>{
+    const note=a.clients?.note?`<p style="font-size:11px;color:#f59e0b;font-style:italic;margin-top:2px;">📌 ${a.clients.note}</p>`:'';
+    const badge=a.statut==='valide'?'<span class="badge badge-green">Validé</span>':'<span class="badge badge-gray">En attente</span>';
     return `<div class="card" style="margin-bottom:8px;">
       <div class="row-between mb4">
         <div class="row gap8">
@@ -635,29 +592,29 @@ function renderAdminArrets() {
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
           ${badge}
-          ${a.statut!=='valide' ? `<button class="btn-sm" onclick="openEditClient('${a.id}')">✎</button>` : ''}
+          ${a.statut!=='valide'?`<button class="btn-sm" onclick="openEditClient(${a.id},${a.clients?.id})">✎</button>`:''}
         </div>
       </div>
-      ${a.statut!=='valide' ? `<div class="row" style="gap:6px;margin-top:8px;border-top:1px solid #f3f4f6;padding-top:8px;">
+      ${a.statut!=='valide'?`<div class="row" style="gap:6px;margin-top:8px;border-top:1px solid #f3f4f6;padding-top:8px;">
         <button class="btn-sm" onclick="moveArret(${i},-1)" ${i===0?'disabled style="opacity:0.3"':''}>↑</button>
         <button class="btn-sm" onclick="moveArret(${i},1)" ${i===state.arrets.length-1?'disabled style="opacity:0.3"':''}>↓</button>
-      </div>` : ''}
+      </div>`:''}
     </div>`;
   }).join('');
 }
 
-async function moveArret(idx, dir) {
-  const newIdx = idx+dir;
-  if (newIdx<0||newIdx>=state.arrets.length) return;
-  const a=state.arrets[idx], b=state.arrets[newIdx];
+async function moveArret(idx,dir){
+  const newIdx=idx+dir; if(newIdx<0||newIdx>=state.arrets.length)return;
+  const a=state.arrets[idx],b=state.arrets[newIdx];
   await sb.from('arrets').update({ordre:newIdx}).eq('id',a.id);
   await sb.from('arrets').update({ordre:idx}).eq('id',b.id);
   await loadAdminArrets(state.currentTournee.id);
 }
 
-function openEditClient(arretId) {
-  const a = state.arrets.find(x=>x.id===arretId); if (!a) return;
+function openEditClient(arretId,clientId){
+  const a=state.arrets.find(x=>x.id===arretId); if(!a)return;
   document.getElementById('edit-client-id').value=arretId;
+  document.getElementById('edit-client-client-id').value=clientId;
   document.getElementById('edit-client-nom').value=a.clients?.nom||'';
   document.getElementById('edit-client-adresse').value=a.clients?.adresse||'';
   document.getElementById('edit-client-cp').value=a.clients?.cp||'';
@@ -667,28 +624,25 @@ function openEditClient(arretId) {
   document.getElementById('modal-edit-client').style.display='flex';
 }
 
-async function saveEditClient() {
-  const arretId=document.getElementById('edit-client-id').value;
-  const a=state.arrets.find(x=>x.id===arretId);
-  await sb.from('clients').update({ nom:document.getElementById('edit-client-nom').value, adresse:document.getElementById('edit-client-adresse').value, cp:document.getElementById('edit-client-cp').value, ville:document.getElementById('edit-client-ville').value, bidons_place:+document.getElementById('edit-client-bidons').value, note:document.getElementById('edit-client-note').value }).eq('id',a.clients.id);
-  closeEditClientModal();
-  await loadAdminArrets(state.currentTournee.id);
+async function saveEditClient(){
+  const clientId=document.getElementById('edit-client-client-id').value;
+  await sb.from('clients').update({nom:document.getElementById('edit-client-nom').value,adresse:document.getElementById('edit-client-adresse').value,cp:document.getElementById('edit-client-cp').value,ville:document.getElementById('edit-client-ville').value,bidons_place:+document.getElementById('edit-client-bidons').value,note:document.getElementById('edit-client-note').value}).eq('id',clientId);
+  closeEditClientModal();await loadAdminArrets(state.currentTournee.id);
 }
 
-async function deleteClientFromTournee() {
+async function deleteClientFromTournee(){
   await sb.from('arrets').delete().eq('id',document.getElementById('edit-client-id').value);
-  closeEditClientModal();
-  await loadAdminArrets(state.currentTournee.id);
+  closeEditClientModal();await loadAdminArrets(state.currentTournee.id);
 }
 
-function closeEditClientModal() { document.getElementById('modal-edit-client').style.display='none'; }
-function showAddClientModal() { document.getElementById('modal-add-client').style.display='flex'; }
-function closeAddClientModal() { document.getElementById('modal-add-client').style.display='none'; }
+function closeEditClientModal(){document.getElementById('modal-edit-client').style.display='none';}
+function showAddClientModal(){document.getElementById('modal-add-client').style.display='flex';}
+function closeAddClientModal(){document.getElementById('modal-add-client').style.display='none';}
 
-async function saveNewClient() {
-  const nom=document.getElementById('new-client-nom').value.trim(); if (!nom) return;
-  const { data: client } = await sb.from('clients').insert({ nom, adresse:document.getElementById('new-client-adresse').value, cp:document.getElementById('new-client-cp').value, ville:document.getElementById('new-client-ville').value, bidons_place:+document.getElementById('new-client-bidons').value, note:document.getElementById('new-client-note').value }).select().single();
-  await sb.from('arrets').insert({ tournee_id:state.currentTournee.id, client_id:client.id, ordre:state.arrets.length });
+async function saveNewClient(){
+  const nom=document.getElementById('new-client-nom').value.trim(); if(!nom)return;
+  const {data:client}=await sb.from('clients').insert({nom,adresse:document.getElementById('new-client-adresse').value,cp:document.getElementById('new-client-cp').value,ville:document.getElementById('new-client-ville').value,bidons_place:+document.getElementById('new-client-bidons').value,note:document.getElementById('new-client-note').value}).select().single();
+  await sb.from('arrets').insert({tournee_id:state.currentTournee.id,client_id:client.id,ordre:state.arrets.length});
   closeAddClientModal();
   ['nom','adresse','cp','ville','note'].forEach(f=>document.getElementById('new-client-'+f).value='');
   document.getElementById('new-client-bidons').value='1';
