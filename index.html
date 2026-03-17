@@ -87,6 +87,18 @@
       <p class="label mb12">Équipements de sécurité</p>
       <div id="checklist-items"></div>
     </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <p class="label mb8">Kilométrage du camion <span style="color:#ef4444;">*</span></p>
+      <input type="number" id="km-input" placeholder="Ex: 124563" style="margin-bottom:12px;" min="0" />
+      <p class="label mb8">Photo du compteur <span style="color:#ef4444;">*</span></p>
+      <div id="km-photo-preview" style="display:none;position:relative;margin-bottom:8px;">
+        <img id="km-photo-img" style="width:100%;border-radius:10px;max-height:200px;object-fit:cover;" />
+        <button onclick="removeKmPhoto()" style="position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;cursor:pointer;">✕</button>
+      </div>
+      <input type="file" id="km-photo-input" accept="image/*" capture="environment" onchange="handleKmPhoto(event)" style="display:none;" />
+      <button id="km-photo-btn" class="btn btn-outline" onclick="document.getElementById('km-photo-input').click()" style="font-size:13px;">📷 Photographier le compteur</button>
+    </div>
     <p id="checklist-error" style="color:#ef4444;font-size:13px;text-align:center;margin-bottom:10px;display:none;">Vous devez cocher tous les éléments avant de continuer.</p>
     <button class="btn btn-blue" onclick="validateChecklist()">Commencer ma tournée →</button>
   </div>
@@ -296,7 +308,8 @@ let state = {
   chauffeurs: [], currentChauffeur: null, currentTournee: null,
   arrets: [], currentArretIdx: null, bidons: [],
   photoData: null, signatureData: null, signataireNom: '',
-  adminSelectedChauffeur: null, sigDrawn: false
+  adminSelectedChauffeur: null, sigDrawn: false,
+  kmPhotoData: null, kmDepart: null
 };
 
 function getTodayStr() {
@@ -347,11 +360,27 @@ function showChecklist() {
 
 async function validateChecklist() {
   const allChecked = CHECKLIST.every(item => document.getElementById('check-' + item.id)?.checked);
+  const km = document.getElementById('km-input').value.trim();
+  const kmPhoto = state.kmPhotoData;
+
   if (!allChecked) {
+    document.getElementById('checklist-error').textContent = 'Vous devez cocher tous les éléments avant de continuer.';
     document.getElementById('checklist-error').style.display = 'block';
     return;
   }
+  if (!km) {
+    document.getElementById('checklist-error').textContent = 'Veuillez saisir le kilométrage du camion.';
+    document.getElementById('checklist-error').style.display = 'block';
+    return;
+  }
+  if (!kmPhoto) {
+    document.getElementById('checklist-error').textContent = 'Veuillez prendre une photo du compteur kilométrique.';
+    document.getElementById('checklist-error').style.display = 'block';
+    return;
+  }
+
   document.getElementById('checklist-error').style.display = 'none';
+  state.kmDepart = km;
   showScreen('chauffeur-loading');
   await loadTournee(state.currentChauffeur.id);
 }
@@ -505,6 +534,23 @@ function renderBidons() {
       ${b.niveau!==null?`<p style="font-size:12px;color:${color};font-weight:700;margin-top:8px;">Volume : ${Math.round(b.volume*b.niveau)} L (${Math.round(b.niveau*100)}%)</p>`:''}
     </div>`;
   }).join('');
+}
+
+function handleKmPhoto(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    state.kmPhotoData = ev.target.result;
+    document.getElementById('km-photo-img').src = ev.target.result;
+    document.getElementById('km-photo-preview').style.display = 'block';
+    document.getElementById('km-photo-btn').style.display = 'none';
+  };
+  r.readAsDataURL(f);
+}
+function removeKmPhoto() {
+  state.kmPhotoData = null;
+  document.getElementById('km-photo-preview').style.display = 'none';
+  document.getElementById('km-photo-btn').style.display = 'block';
 }
 
 function handlePhoto(e) {
