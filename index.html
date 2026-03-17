@@ -87,7 +87,7 @@
     <input type="password" id="admin-pwd" placeholder="Mot de passe" style="margin-bottom:8px;" onkeydown="if(event.key==='Enter') checkAdmin()" />
     <p id="admin-error" style="color:#ef4444; font-size:12px; margin-bottom:8px; display:none;">Mot de passe incorrect</p>
     <button class="btn btn-blue" onclick="checkAdmin()">Connexion</button>
-    <p style="font-size:11px; color:#9ca3af; margin-top:12px;">Mot de passe : easycollect2026</p>
+
   </div>
 </div>
 
@@ -609,7 +609,7 @@ async function validerArret() {
 // ─── ADMIN ────────────────────────────────────────────────────
 function checkAdmin() {
   const pwd = document.getElementById('admin-pwd').value;
-  if (pwd === 'easycollect2026') { document.getElementById('admin-error').style.display = 'none'; document.getElementById('admin-pwd').value = ''; showScreen('admin-list'); }
+  if (pwd === 'Denismarvin77&') { document.getElementById('admin-error').style.display = 'none'; document.getElementById('admin-pwd').value = ''; showScreen('admin-list'); }
   else { document.getElementById('admin-error').style.display = 'block'; }
 }
 
