@@ -76,6 +76,22 @@
   </div>
 </div>
 
+<div id="screen-checklist" class="screen">
+  <div style="max-width:480px;margin:0 auto;padding:1.5rem 1rem;">
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <div style="font-size:40px;margin-bottom:8px;">⚠️</div>
+      <h2 style="margin-bottom:6px;">Vérification avant départ</h2>
+      <p style="color:#6b7280;font-size:13px;">Confirmez que vous avez tout le nécessaire avant de commencer votre tournée.</p>
+    </div>
+    <div class="card" style="margin-bottom:16px;">
+      <p class="label mb12">Équipements de sécurité</p>
+      <div id="checklist-items"></div>
+    </div>
+    <p id="checklist-error" style="color:#ef4444;font-size:13px;text-align:center;margin-bottom:10px;display:none;">Vous devez cocher tous les éléments avant de continuer.</p>
+    <button class="btn btn-blue" onclick="validateChecklist()">Commencer ma tournée →</button>
+  </div>
+</div>
+
 <div id="screen-admin-login" class="screen">
   <div class="row mb16" style="margin-top:8px;">
     <button class="back-btn" onclick="showScreen('home')">‹</button>
@@ -257,6 +273,14 @@ const SUPABASE_URL = 'https://usjszwypepbtkmacblzk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzanN6d3lwZXBidGttYWNibHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODM3MTYsImV4cCI6MjA4OTM1OTcxNn0.--c_djVnUAAsJ-LC35xxBwF3xvHbp27TwLdMC9Pkn9Q';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const CHECKLIST = [
+  { id: 'chaussures', icon: '👟', label: 'Je porte mes chaussures de sécurité' },
+  { id: 'gants',      icon: '🧤', label: 'J\'ai ma paire de gants fournie' },
+  { id: 'absorbant',  icon: '🧽', label: 'J\'ai mon absorbant' },
+  { id: 'chariot',    icon: '🛒', label: 'J\'ai mon chariot de manutention' },
+  { id: 'sacs',       icon: '🗑️', label: 'J\'ai mes sacs poubelles' },
+];
+
 const CHAUFFEURS_CONFIG = {
   'adam':    { nom: 'Adam',    avatar: 'AD' },
   'michael': { nom: 'Michael', avatar: 'MI' },
@@ -299,7 +323,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     console.log('Chauffeur trouvé:', chauffeur);
     if (chauffeur) {
       state.currentChauffeur = chauffeur;
-      await loadTournee(chauffeur.id);
+      showChecklist();
     } else {
       alert('Chauffeur introuvable');
       showScreen('home');
@@ -308,6 +332,29 @@ window.addEventListener('DOMContentLoaded', async () => {
     showScreen('home');
   }
 });
+
+function showChecklist() {
+  const el = document.getElementById('checklist-items');
+  el.innerHTML = CHECKLIST.map(item => `
+    <label style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f3f4f6;cursor:pointer;">
+      <input type="checkbox" id="check-${item.id}" style="width:20px;height:20px;cursor:pointer;accent-color:#3b82f6;flex-shrink:0;" />
+      <span style="font-size:20px;">${item.icon}</span>
+      <span style="font-size:14px;font-weight:500;">${item.label}</span>
+    </label>
+  `).join('');
+  showScreen('checklist');
+}
+
+async function validateChecklist() {
+  const allChecked = CHECKLIST.every(item => document.getElementById('check-' + item.id)?.checked);
+  if (!allChecked) {
+    document.getElementById('checklist-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('checklist-error').style.display = 'none';
+  showScreen('chauffeur-loading');
+  await loadTournee(state.currentChauffeur.id);
+}
 
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
