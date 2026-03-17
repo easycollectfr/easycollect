@@ -121,9 +121,25 @@
 <div id="screen-admin-list" class="screen">
   <div class="row mb16" style="margin-top:8px;">
     <button class="back-btn" onclick="showScreen('home')">‹</button>
-    <h2>Gestion des tournées</h2>
+    <h2>Espace gestionnaire</h2>
   </div>
-  <div id="admin-chauffeurs-list"><div class="loading">Chargement...</div></div>
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <button id="tab-tournees-btn" class="btn btn-blue" style="flex:1;padding:10px;font-size:13px;" onclick="switchAdminTab('tournees')">Tournées</button>
+    <button id="tab-recap-btn" class="btn btn-outline" style="flex:1;padding:10px;font-size:13px;" onclick="switchAdminTab('recap')">Récap journée</button>
+  </div>
+  <div id="tab-tournees">
+    <div id="admin-chauffeurs-list"><div class="loading">Chargement...</div></div>
+  </div>
+  <div id="tab-recap" style="display:none;">
+    <div class="card mb12">
+      <p class="label mb8">Sélectionner une date</p>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="date" id="recap-date" style="flex:1;" />
+        <button class="btn-sm btn-blue" style="background:#3b82f6;color:#fff;border:none;" onclick="loadRecap()">Voir</button>
+      </div>
+    </div>
+    <div id="recap-content"></div>
+  </div>
 </div>
 
 <div id="screen-admin-tournee" class="screen">
