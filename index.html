@@ -274,9 +274,10 @@ const CHAUFFEURS_CONFIG = {
   'michael': { nom: 'Michael', avatar: 'MI' },
   'karim':   { nom: 'Karim',   avatar: 'KA' },
   'joan':    { nom: 'Joan',    avatar: 'JO' },
+  'denis':   { nom: 'Denis',   avatar: 'DE' },
 };
 
-const AVATAR_COLORS = ['#3b82f6','#8b5cf6','#10b981','#f59e0b'];
+const AVATAR_COLORS = ['#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444'];
 const getColor = (slug) => { const keys = Object.keys(CHAUFFEURS_CONFIG); return AVATAR_COLORS[keys.indexOf(slug) % AVATAR_COLORS.length]; };
 
 let state = {
