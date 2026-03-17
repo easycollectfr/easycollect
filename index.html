@@ -266,6 +266,9 @@
 <script>
 const SUPABASE_URL = 'https://usjszwypepbtkmacblzk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzanN6d3lwZXBidGttYWNibHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODM3MTYsImV4cCI6MjA4OTM1OTcxNn0.--c_djVnUAAsJ-LC35xxBwF3xvHbp27TwLdMC9Pkn9Q';
+
+// Debug log
+console.log('EasyCollect chargé, URL params:', window.location.search);
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Chauffeurs avec leurs slugs URL
