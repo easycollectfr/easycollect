@@ -1,164 +1,165 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>EasyCollect</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; min-height: 100vh; }
-    .screen { display: none; max-width: 480px; margin: 0 auto; padding: 1.25rem 1rem 6rem; }
-    .screen.active { display: block; }
-    h1 { font-size: 22px; font-weight: 800; }
-    h2 { font-size: 18px; font-weight: 700; }
-    h3 { font-size: 16px; font-weight: 700; }
-    p { font-size: 14px; line-height: 1.5; }
-    .card { background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-    .btn { display: block; width: 100%; padding: 13px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; }
-    .btn-blue { background: #3b82f6; color: #fff; }
-    .btn-green { background: #10b981; color: #fff; }
-    .btn-gray { background: #e5e7eb; color: #9ca3af; }
-    .btn-outline { background: #fff; color: #374151; border: 1px solid #d1d5db; }
-    .btn-waze { background: #33ccff; color: #fff; font-weight: 700; }
-    .btn-sm { padding: 6px 12px; font-size: 13px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; font-weight: 600; }
-    .btn-danger { color: #ef4444; border-color: #fca5a5; background: #fef2f2; }
-    input, textarea { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; background: #fff; }
-    input:focus, textarea:focus { border-color: #3b82f6; }
-    textarea { resize: vertical; min-height: 70px; }
-    .label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-    .badge-blue { background: #dbeafe; color: #1d4ed8; }
-    .badge-green { background: #d1fae5; color: #065f46; }
-    .badge-gray { background: #f3f4f6; color: #6b7280; }
-    .row { display: flex; align-items: center; gap: 10px; }
-    .row-between { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0; }
-    .circle-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
-    .progress-bar { height: 6px; background: rgba(255,255,255,0.3); border-radius: 4px; overflow: hidden; margin: 8px 0 4px; }
-    .progress-fill { height: 100%; background: #fff; border-radius: 4px; transition: width 0.4s; }
-    .hero { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 16px; padding: 16px 18px; margin-bottom: 16px; color: #fff; }
-    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-    .niveau-btn { padding: 8px 4px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; }
-    .note-banner { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; }
-    .fixed-bottom { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem; background: #fff; border-top: 1px solid #e5e7eb; z-index: 50; }
-    .error-msg { font-size: 12px; color: #ef4444; text-align: center; margin-bottom: 8px; }
-    .loading { text-align: center; padding: 3rem; color: #6b7280; }
-    .sig-canvas { border: 1px solid #e5e7eb; border-radius: 10px; background: #fafafa; touch-action: none; cursor: crosshair; width: 100%; height: 130px; }
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: flex-end; justify-content: center; z-index: 100; }
-    .modal { background: #fff; border-radius: 20px 20px 0 0; padding: 1.5rem; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-    .modal-handle { width: 40px; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 0 auto 1.25rem; }
-    .back-btn { font-size: 22px; padding: 2px 10px; background: none; border: none; cursor: pointer; color: #374151; }
-    .chevron { color: #9ca3af; font-size: 20px; }
-    .mb4 { margin-bottom: 4px; }
-    .mb8 { margin-bottom: 8px; }
-    .mb12 { margin-bottom: 12px; }
-    .mb16 { margin-bottom: 16px; }
-    .gap8 { gap: 8px; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>EasyCollect</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f3f4f6;min-height:100vh;}
+.screen{display:none;max-width:480px;margin:0 auto;padding:1.25rem 1rem 6rem;}
+.screen.active{display:block;}
+.card{background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.btn{display:block;width:100%;padding:13px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;text-align:center;}
+.btn-blue{background:#3b82f6;color:#fff;}
+.btn-green{background:#10b981;color:#fff;}
+.btn-gray{background:#e5e7eb;color:#9ca3af;}
+.btn-outline{background:#fff;color:#374151;border:1px solid #d1d5db;}
+.btn-red{background:#ef4444;color:#fff;}
+.btn-sm{padding:6px 12px;font-size:13px;border-radius:8px;border:1px solid #d1d5db;background:#fff;cursor:pointer;font-weight:600;}
+.btn-danger{color:#ef4444;border-color:#fca5a5;background:#fef2f2;}
+input,textarea{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;outline:none;background:#fff;color:#111;}
+input:focus,textarea:focus{border-color:#3b82f6;}
+textarea{resize:vertical;min-height:70px;}
+.label{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-blue{background:#dbeafe;color:#1d4ed8;}
+.badge-green{background:#d1fae5;color:#065f46;}
+.badge-gray{background:#f3f4f6;color:#6b7280;}
+.badge-red{background:#fee2e2;color:#991b1b;}
+.row{display:flex;align-items:center;gap:10px;}
+.row-between{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;}
+.circle-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;}
+.progress-bar{height:6px;background:rgba(255,255,255,0.3);border-radius:4px;overflow:hidden;margin:8px 0 4px;}
+.progress-fill{height:100%;background:#fff;border-radius:4px;transition:width 0.4s;}
+.hero{background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:16px;padding:16px 18px;margin-bottom:16px;color:#fff;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.niveau-btn{padding:8px 4px;border-radius:8px;border:1px solid #d1d5db;background:#fff;font-size:13px;font-weight:600;cursor:pointer;text-align:center;}
+.note-banner{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:10px 14px;margin-bottom:14px;}
+.fixed-bottom{position:fixed;bottom:0;left:0;right:0;padding:1rem;background:#fff;border-top:1px solid #e5e7eb;z-index:50;}
+.error-msg{font-size:12px;color:#ef4444;text-align:center;margin-bottom:8px;}
+.loading{text-align:center;padding:3rem;color:#6b7280;}
+.sig-canvas{border:1px solid #e5e7eb;border-radius:10px;background:#fafafa;touch-action:none;cursor:crosshair;width:100%;height:130px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:flex-end;justify-content:center;z-index:100;}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;}
+.modal-handle{width:40px;height:4px;background:#e5e7eb;border-radius:2px;margin:0 auto 1.25rem;}
+.back-btn{font-size:22px;padding:2px 10px;background:none;border:none;cursor:pointer;color:#374151;}
+.chevron{color:#9ca3af;font-size:20px;}
+.check-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f3f4f6;cursor:pointer;}
+.check-item:last-child{border-bottom:none;}
+.check-item input[type=checkbox]{width:22px;height:22px;cursor:pointer;accent-color:#3b82f6;flex-shrink:0;}
+.photo-zone{border:2px dashed #d1d5db;border-radius:12px;padding:20px;text-align:center;cursor:pointer;margin-bottom:10px;}
+.photo-zone:hover{border-color:#3b82f6;background:#eff6ff;}
+.notif-dot{width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block;margin-left:6px;}
+</style>
 </head>
 <body>
 
+<!-- HOME -->
 <div id="screen-home" class="screen active">
-  <div style="text-align:center; padding: 3rem 1rem 2rem;">
-    <div style="font-size:48px; margin-bottom:12px;">🚚</div>
-    <h1 style="margin-bottom:6px;">EasyCollect</h1>
-    <p style="color:#6b7280; margin-bottom:2rem;">Gestion des collectes d'huiles usagées</p>
+  <div style="text-align:center;padding:3rem 1rem 2rem;">
+    <div style="font-size:48px;margin-bottom:12px;">🚚</div>
+    <h1 style="font-size:24px;font-weight:800;margin-bottom:6px;">EasyCollect</h1>
+    <p style="color:#6b7280;margin-bottom:2.5rem;font-size:14px;">Gestion des collectes d'huiles usagées</p>
+    <button class="btn btn-blue" style="margin-bottom:12px;" onclick="showScreen('chauffeur-login')">Je suis chauffeur</button>
     <button class="btn btn-outline" onclick="showScreen('admin-login')">Accès gestionnaire</button>
   </div>
 </div>
 
+<!-- CHAUFFEUR LOADING -->
 <div id="screen-chauffeur-loading" class="screen">
   <div class="loading" style="padding-top:5rem;">
     <div style="font-size:36px;margin-bottom:12px;">🚚</div>
-    <p>Chargement de votre tournée...</p>
+    <p>Chargement...</p>
   </div>
 </div>
 
+<!-- CHAUFFEUR LOGIN -->
+<div id="screen-chauffeur-login" class="screen">
+  <div class="row" style="margin-top:8px;margin-bottom:1.5rem;">
+    <button class="back-btn" onclick="showScreen('home')">‹</button>
+    <div><h2 style="font-size:18px;font-weight:700;">Qui êtes-vous ?</h2><p style="color:#6b7280;font-size:13px;">Sélectionnez votre nom</p></div>
+  </div>
+  <div id="chauffeurs-list"><div class="loading">Chargement...</div></div>
+</div>
+
+<!-- CHECKLIST AVANT TOURNEE -->
 <div id="screen-checklist" class="screen">
-  <div style="max-width:480px;margin:0 auto;padding:1.5rem 1rem;">
-    <div style="text-align:center;margin-bottom:1.5rem;">
-      <div style="font-size:40px;margin-bottom:8px;">⚠️</div>
-      <h2 style="margin-bottom:6px;">Vérification avant départ</h2>
-      <p style="color:#6b7280;font-size:13px;">Confirmez que vous avez tout le nécessaire avant de commencer votre tournée.</p>
-    </div>
-    <div class="card" style="margin-bottom:16px;">
-      <p class="label mb12">Équipements de sécurité</p>
-      <div id="checklist-items"></div>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <p class="label mb8">Kilométrage du camion <span style="color:#ef4444;">*</span></p>
-      <input type="number" id="km-input" placeholder="Ex: 124563" style="margin-bottom:12px;" min="0" />
-      <p class="label mb8">Photo du compteur <span style="color:#ef4444;">*</span></p>
-      <div id="km-photo-preview" style="display:none;position:relative;margin-bottom:8px;">
-        <img id="km-photo-img" style="width:100%;border-radius:10px;max-height:200px;object-fit:cover;" />
-        <button onclick="removeKmPhoto()" style="position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;cursor:pointer;">✕</button>
-      </div>
-      <input type="file" id="km-photo-input" accept="image/*" capture="environment" onchange="handleKmPhoto(event)" style="display:none;" />
-      <button id="km-photo-btn" class="btn btn-outline" onclick="document.getElementById('km-photo-input').click()" style="font-size:13px;">📷 Photographier le compteur</button>
-    </div>
-    <p id="checklist-error" style="color:#ef4444;font-size:13px;text-align:center;margin-bottom:10px;display:none;">Vous devez cocher tous les éléments avant de continuer.</p>
-    <button class="btn btn-blue" onclick="validateChecklist()">Commencer ma tournée →</button>
+  <div style="text-align:center;margin-bottom:1.5rem;padding-top:1rem;">
+    <div style="font-size:36px;margin-bottom:8px;">⚠️</div>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:6px;">Avant de partir</h2>
+    <p style="color:#6b7280;font-size:13px;">Vérifiez tout avant de commencer votre tournée</p>
   </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:10px;">Équipements & sécurité</p>
+    <label class="check-item"><input type="checkbox" id="chk-chaussures"/><span style="font-size:18px;">👟</span><span style="font-size:14px;font-weight:500;">Chaussures de sécurité</span></label>
+    <label class="check-item"><input type="checkbox" id="chk-gants"/><span style="font-size:18px;">🧤</span><span style="font-size:14px;font-weight:500;">Gants fournis</span></label>
+    <label class="check-item"><input type="checkbox" id="chk-tenue"/><span style="font-size:18px;">👕</span><span style="font-size:14px;font-weight:500;">Tenue EasyCollect</span></label>
+    <label class="check-item"><input type="checkbox" id="chk-absorbant"/><span style="font-size:18px;">🧽</span><span style="font-size:14px;font-weight:500;">Absorbant</span></label>
+    <label class="check-item"><input type="checkbox" id="chk-chariot"/><span style="font-size:18px;">🛒</span><span style="font-size:14px;font-weight:500;">Chariot de manutention</span></label>
+    <label class="check-item"><input type="checkbox" id="chk-sacs"/><span style="font-size:18px;">🗑️</span><span style="font-size:14px;font-weight:500;">Sacs poubelles</span></label>
+    <label class="check-item"><input type="checkbox" id="chk-huile"/><span style="font-size:18px;">🛢️</span><span style="font-size:14px;font-weight:500;">Huile neuve (si besoin)</span></label>
+    <label class="check-item"><input type="checkbox" id="chk-ceinture"/><span style="font-size:18px;">🔒</span><span style="font-size:14px;font-weight:500;">Je m'engage à porter ma ceinture</span></label>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:10px;">Kilométrage départ <span style="color:#ef4444;">*</span></p>
+    <input type="number" id="km-depart" placeholder="Ex: 124563" min="0" style="margin-bottom:0;"/>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:10px;">Photo compteur <span style="color:#ef4444;">*</span></p>
+    <input type="file" id="photo-compteur-input" accept="image/*" capture="environment" onchange="handleChecklistPhoto('compteur')" style="display:none;"/>
+    <div id="photo-compteur-preview" style="display:none;position:relative;margin-bottom:8px;">
+      <img id="photo-compteur-img" style="width:100%;border-radius:10px;max-height:180px;object-fit:cover;"/>
+      <button onclick="removeChecklistPhoto('compteur')" style="position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;cursor:pointer;">✕</button>
+    </div>
+    <div class="photo-zone" id="photo-compteur-zone" onclick="document.getElementById('photo-compteur-input').click()">
+      <div style="font-size:24px;margin-bottom:6px;">📷</div>
+      <p style="font-size:13px;color:#6b7280;">Photographier le compteur</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:10px;">Selfie chauffeur <span style="color:#ef4444;">*</span></p>
+    <input type="file" id="photo-selfie-input" accept="image/*" capture="user" onchange="handleChecklistPhoto('selfie')" style="display:none;"/>
+    <div id="photo-selfie-preview" style="display:none;position:relative;margin-bottom:8px;">
+      <img id="photo-selfie-img" style="width:100%;border-radius:10px;max-height:180px;object-fit:cover;"/>
+      <button onclick="removeChecklistPhoto('selfie')" style="position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;cursor:pointer;">✕</button>
+    </div>
+    <div class="photo-zone" id="photo-selfie-zone" onclick="document.getElementById('photo-selfie-input').click()">
+      <div style="font-size:24px;margin-bottom:6px;">🤳</div>
+      <p style="font-size:13px;color:#6b7280;">Prendre un selfie</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <p class="label" style="margin-bottom:10px;">Photo du camion <span style="color:#ef4444;">*</span></p>
+    <input type="file" id="photo-camion-input" accept="image/*" capture="environment" onchange="handleChecklistPhoto('camion')" style="display:none;"/>
+    <div id="photo-camion-preview" style="display:none;position:relative;margin-bottom:8px;">
+      <img id="photo-camion-img" style="width:100%;border-radius:10px;max-height:180px;object-fit:cover;"/>
+      <button onclick="removeChecklistPhoto('camion')" style="position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;cursor:pointer;">✕</button>
+    </div>
+    <div class="photo-zone" id="photo-camion-zone" onclick="document.getElementById('photo-camion-input').click()">
+      <div style="font-size:24px;margin-bottom:6px;">🚚</div>
+      <p style="font-size:13px;color:#6b7280;">Photographier le camion</p>
+    </div>
+  </div>
+
+  <p id="checklist-error" style="color:#ef4444;font-size:13px;text-align:center;margin-bottom:10px;display:none;"></p>
+  <button class="btn btn-blue" onclick="validateChecklist()" style="margin-bottom:2rem;">Commencer ma tournée →</button>
 </div>
 
-<div id="screen-admin-login" class="screen">
-  <div class="row mb16" style="margin-top:8px;">
-    <button class="back-btn" onclick="showScreen('home')">‹</button>
-    <h2>Accès gestionnaire</h2>
-  </div>
-  <div class="card" style="text-align:center; padding:2rem;">
-    <div style="font-size:36px;margin-bottom:12px;">🔐</div>
-    <p style="color:#6b7280;margin-bottom:1rem;">Mot de passe gestionnaire</p>
-    <input type="password" id="admin-pwd" placeholder="Mot de passe" style="margin-bottom:8px;" onkeydown="if(event.key==='Enter') checkAdmin()" />
-    <p id="admin-error" style="color:#ef4444;font-size:12px;margin-bottom:8px;display:none;">Mot de passe incorrect</p>
-    <button class="btn btn-blue" onclick="checkAdmin()">Connexion</button>
-  </div>
-</div>
-
-<div id="screen-admin-list" class="screen">
-  <div class="row mb16" style="margin-top:8px;">
-    <button class="back-btn" onclick="showScreen('home')">‹</button>
-    <h2>Espace gestionnaire</h2>
-  </div>
-  <div style="display:flex;gap:8px;margin-bottom:16px;">
-    <button id="tab-tournees-btn" class="btn btn-blue" style="flex:1;padding:10px;font-size:13px;" onclick="switchAdminTab('tournees')">Tournées</button>
-    <button id="tab-recap-btn" class="btn btn-outline" style="flex:1;padding:10px;font-size:13px;" onclick="switchAdminTab('recap')">Récap journée</button>
-  </div>
-  <div id="tab-tournees">
-    <div id="admin-chauffeurs-list"><div class="loading">Chargement...</div></div>
-  </div>
-  <div id="tab-recap" style="display:none;">
-    <div class="card mb12">
-      <p class="label mb8">Sélectionner une date</p>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <input type="date" id="recap-date" style="flex:1;" />
-        <button class="btn-sm btn-blue" style="background:#3b82f6;color:#fff;border:none;" onclick="loadRecap()">Voir</button>
-      </div>
-    </div>
-    <div id="recap-content"></div>
-  </div>
-</div>
-
-<div id="screen-admin-tournee" class="screen">
-  <div class="row mb16" style="margin-top:8px;">
-    <button class="back-btn" onclick="showScreen('admin-list')">‹</button>
-    <div>
-      <p class="label mb4">Tournée de</p>
-      <h2 id="admin-tournee-nom"></h2>
-    </div>
-  </div>
-  <div id="admin-lien-chauffeur" class="card" style="background:#f0fdf4;border:1px solid #86efac;margin-bottom:14px;"></div>
-  <div id="admin-arrets-list"></div>
-  <button class="btn btn-outline" onclick="showAddClientModal()" style="margin-top:8px;">+ Ajouter un client</button>
-</div>
-
+<!-- TOURNEE -->
 <div id="screen-tournee" class="screen">
-  <div class="row mb12" style="margin-top:8px;">
+  <div class="row" style="margin-top:8px;margin-bottom:12px;">
     <div style="flex:1;">
-      <h2 id="tournee-titre"></h2>
+      <h2 id="tournee-titre" style="font-size:17px;font-weight:700;"></h2>
       <p id="tournee-date" style="color:#6b7280;font-size:13px;"></p>
     </div>
   </div>
@@ -170,66 +171,75 @@
     <div class="progress-bar"><div class="progress-fill" id="hero-bar" style="width:0%"></div></div>
   </div>
   <div id="arrets-list"></div>
+  <div id="btn-fin-tournee-container" style="display:none;margin-top:8px;">
+    <button class="btn btn-green" onclick="showScreen('fin-tournee')">✅ Terminer ma tournée</button>
+  </div>
 </div>
 
+<!-- ARRET -->
 <div id="screen-arret" class="screen">
-  <div class="row mb12" style="margin-top:8px;">
+  <div class="row" style="margin-top:8px;margin-bottom:12px;">
     <button class="back-btn" onclick="showScreen('tournee')">‹</button>
-    <div>
-      <p class="label mb4" id="arret-num"></p>
-      <h2 id="arret-nom"></h2>
-    </div>
+    <div><p class="label" id="arret-num" style="margin-bottom:2px;"></p><h2 id="arret-nom" style="font-size:17px;font-weight:700;"></h2></div>
   </div>
-  <div id="arret-note-banner" style="display:none;" class="note-banner">
+
+  <div id="arret-note-banner" class="note-banner" style="display:none;">
     <p style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:2px;">📌 NOTE DU GESTIONNAIRE</p>
     <p id="arret-note-text" style="font-size:13px;color:#78350f;"></p>
   </div>
-  <div class="card mb12">
-    <p class="label mb8">Adresse</p>
-    <p id="arret-adresse" style="font-weight:600;margin-bottom:4px;"></p>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:8px;">Adresse</p>
+    <p id="arret-adresse" style="font-weight:700;margin-bottom:4px;font-size:15px;"></p>
     <p id="arret-cp-ville" style="color:#6b7280;margin-bottom:10px;"></p>
-    <p id="arret-bidons-place" style="color:#3b82f6;font-weight:700;font-size:13px;margin-bottom:10px;"></p>
-    <div class="grid2">
-      <button class="btn btn-waze" onclick="launchWaze()" style="border-radius:10px;padding:10px;">➤ Waze</button>
-      <button class="btn btn-outline" onclick="toggleManuel()" style="border-radius:10px;padding:10px;font-size:13px;">Adresse manuelle</button>
+    <p id="arret-bidons-place" style="color:#3b82f6;font-weight:700;font-size:13px;margin-bottom:12px;"></p>
+    <div class="grid2" style="margin-bottom:8px;">
+      <button onclick="launchNav('waze')" style="padding:11px;border-radius:10px;background:#33ccff;color:#fff;border:none;font-weight:700;font-size:13px;cursor:pointer;">🚗 Waze</button>
+      <button onclick="launchNav('gmaps')" style="padding:11px;border-radius:10px;background:#4285f4;color:#fff;border:none;font-weight:700;font-size:13px;cursor:pointer;">🗺️ Google Maps</button>
     </div>
+    <button class="btn-sm" onclick="toggleManuel()" style="width:100%;font-size:12px;">Saisie manuelle d'adresse</button>
     <div id="manuel-input" style="display:none;margin-top:10px;">
-      <input id="manuel-adresse" placeholder="Entrez une adresse puis Entrée" onkeydown="if(event.key==='Enter') launchWazeManuel()" />
+      <input id="manuel-adresse" placeholder="Entrez une adresse puis Entrée" onkeydown="if(event.key==='Enter'){launchNavManuel();}"/>
     </div>
   </div>
-  <div class="card mb12">
-    <p class="label mb8">Bidons collectés <span style="color:#ef4444;">*</span></p>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:10px;">Bidons collectés <span style="color:#ef4444;">*</span></p>
     <div id="bidons-list"></div>
-    <p class="label mb8" style="margin-top:4px;">Ajouter un bidon</p>
+    <p class="label" style="margin-bottom:8px;margin-top:4px;">Ajouter un bidon</p>
     <div class="grid2">
       <button onclick="addBidon('b60',60,'#3b82f6')" style="padding:10px;border-radius:10px;border:1.5px solid #93c5fd;background:#eff6ff;color:#1d4ed8;font-weight:700;cursor:pointer;">+ 60 L</button>
-      <button onclick="addBidon('b80',80,'#8b5cf6')" style="padding:10px;border-radius:10px;border:1.5px solid #c4b5fd;background:#f5f3ff;color:#5b21b6;font-weight:700;cursor:pointer;">+ 80 L (Poubelle)</button>
+      <button onclick="addBidon('b80',80,'#8b5cf6')" style="padding:10px;border-radius:10px;border:1.5px solid #c4b5fd;background:#f5f3ff;color:#5b21b6;font-weight:700;cursor:pointer;">+ 80 L 🗑️</button>
       <button onclick="addBidon('b120',120,'#10b981')" style="padding:10px;border-radius:10px;border:1.5px solid #6ee7b7;background:#ecfdf5;color:#065f46;font-weight:700;cursor:pointer;">+ 120 L</button>
       <button onclick="addBidon('b150',150,'#f59e0b')" style="padding:10px;border-radius:10px;border:1.5px solid #fcd34d;background:#fffbeb;color:#92400e;font-weight:700;cursor:pointer;">+ 150 L</button>
     </div>
   </div>
-  <div class="card mb12">
-    <p class="label mb8">Photo <span style="font-weight:400;text-transform:none;font-size:11px;">(optionnel)</span></p>
-    <div id="photo-preview" style="display:none;position:relative;margin-bottom:8px;">
-      <img id="photo-img" style="width:100%;border-radius:10px;max-height:180px;object-fit:cover;" />
-      <button onclick="removePhoto()" style="position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;cursor:pointer;">✕</button>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:10px;">Photo <span style="font-weight:400;text-transform:none;font-size:11px;">(optionnel)</span></p>
+    <div id="photo-arret-preview" style="display:none;position:relative;margin-bottom:8px;">
+      <img id="photo-arret-img" style="width:100%;border-radius:10px;max-height:180px;object-fit:cover;"/>
+      <button onclick="removeArretPhoto()" style="position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;cursor:pointer;">✕</button>
     </div>
-    <input type="file" id="photo-input" accept="image/*" capture="environment" onchange="handlePhoto(event)" style="display:none;" />
-    <button id="photo-btn" class="btn btn-outline" onclick="document.getElementById('photo-input').click()" style="font-size:13px;">📷 Prendre une photo</button>
+    <input type="file" id="photo-arret-input" accept="image/*" capture="environment" onchange="handleArretPhoto(event)" style="display:none;"/>
+    <button class="btn btn-outline" id="photo-arret-btn" onclick="document.getElementById('photo-arret-input').click()" style="font-size:13px;">📷 Prendre une photo</button>
   </div>
-  <div class="card mb12">
-    <p class="label mb8">Commentaire <span style="font-weight:400;text-transform:none;font-size:11px;">(optionnel)</span></p>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:8px;">Commentaire <span style="font-weight:400;text-transform:none;font-size:11px;">(optionnel)</span></p>
     <textarea id="arret-commentaire" placeholder="Remarque, problème..."></textarea>
   </div>
-  <div class="card mb12">
-    <p class="label mb8">Signature client <span style="color:#ef4444;">*</span></p>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:10px;">Signature client <span style="color:#ef4444;">*</span></p>
     <div id="sig-done" style="display:none;">
-      <img id="sig-img" style="height:60px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;" />
-      <p id="sig-nom" style="font-size:12px;color:#059669;font-weight:600;margin-top:6px;"></p>
-      <button class="btn-sm" onclick="resetSignature()" style="margin-top:6px;">Modifier</button>
+      <img id="sig-img" style="height:60px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;display:block;margin-bottom:6px;"/>
+      <p id="sig-nom" style="font-size:12px;color:#059669;font-weight:600;margin-bottom:6px;"></p>
+      <button class="btn-sm" onclick="resetSignature()">Modifier</button>
     </div>
     <button id="sig-btn" class="btn" style="background:#fef9c3;color:#92400e;border:1.5px solid #fde68a;" onclick="openSigModal()">✍️ Faire signer le client</button>
   </div>
+
   <div style="height:90px;"></div>
   <div class="fixed-bottom">
     <p id="validate-error" class="error-msg" style="display:none;"></p>
@@ -237,13 +247,101 @@
   </div>
 </div>
 
+<!-- FIN TOURNEE -->
+<div id="screen-fin-tournee" class="screen">
+  <div class="row" style="margin-top:8px;margin-bottom:1.5rem;">
+    <button class="back-btn" onclick="showScreen('tournee')">‹</button>
+    <h2 style="font-size:18px;font-weight:700;">Fin de tournée</h2>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;background:#ecfdf5;border:1px solid #6ee7b7;">
+    <p style="font-size:14px;font-weight:700;color:#065f46;margin-bottom:4px;">🎉 Tournée terminée !</p>
+    <p id="fin-recap-rapide" style="font-size:13px;color:#065f46;"></p>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:10px;">Kilométrage retour <span style="color:#ef4444;">*</span></p>
+    <input type="number" id="km-retour" placeholder="Ex: 124890" min="0"/>
+    <p id="km-calcul" style="font-size:12px;color:#3b82f6;font-weight:600;margin-top:6px;display:none;"></p>
+  </div>
+
+  <div class="card" style="margin-bottom:12px;">
+    <p class="label" style="margin-bottom:10px;">Photo compteur retour <span style="color:#ef4444;">*</span></p>
+    <input type="file" id="photo-retour-input" accept="image/*" capture="environment" onchange="handleChecklistPhoto('retour')" style="display:none;"/>
+    <div id="photo-retour-preview" style="display:none;position:relative;margin-bottom:8px;">
+      <img id="photo-retour-img" style="width:100%;border-radius:10px;max-height:180px;object-fit:cover;"/>
+      <button onclick="removeChecklistPhoto('retour')" style="position:absolute;top:8px;right:8px;padding:4px 8px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;cursor:pointer;">✕</button>
+    </div>
+    <div class="photo-zone" id="photo-retour-zone" onclick="document.getElementById('photo-retour-input').click()">
+      <div style="font-size:24px;margin-bottom:6px;">📷</div>
+      <p style="font-size:13px;color:#6b7280;">Photographier le compteur retour</p>
+    </div>
+  </div>
+
+  <p id="fin-error" style="color:#ef4444;font-size:13px;text-align:center;margin-bottom:10px;display:none;"></p>
+  <button class="btn btn-green" onclick="validerFinTournee()" style="margin-bottom:2rem;">✅ Valider et envoyer au gestionnaire</button>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="screen-admin-login" class="screen">
+  <div class="row" style="margin-top:8px;margin-bottom:1.5rem;">
+    <button class="back-btn" onclick="showScreen('home')">‹</button>
+    <h2 style="font-size:18px;font-weight:700;">Accès gestionnaire</h2>
+  </div>
+  <div class="card" style="text-align:center;padding:2rem;">
+    <div style="font-size:36px;margin-bottom:12px;">🔐</div>
+    <p style="color:#6b7280;margin-bottom:1rem;font-size:14px;">Mot de passe gestionnaire</p>
+    <input type="password" id="admin-pwd" placeholder="Mot de passe" style="margin-bottom:8px;" onkeydown="if(event.key==='Enter')checkAdmin()"/>
+    <p id="admin-error" style="color:#ef4444;font-size:12px;margin-bottom:8px;display:none;">Mot de passe incorrect</p>
+    <button class="btn btn-blue" onclick="checkAdmin()">Connexion</button>
+  </div>
+</div>
+
+<!-- ADMIN LIST -->
+<div id="screen-admin-list" class="screen">
+  <div class="row" style="margin-top:8px;margin-bottom:16px;">
+    <button class="back-btn" onclick="showScreen('home')">‹</button>
+    <h2 style="font-size:18px;font-weight:700;flex:1;">Espace gestionnaire</h2>
+    <div id="notif-badge" style="display:none;background:#ef4444;color:#fff;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700;"></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <button id="tab-t-btn" class="btn btn-blue" style="flex:1;padding:10px;font-size:13px;" onclick="switchTab('tournees')">Tournées</button>
+    <button id="tab-n-btn" class="btn btn-outline" style="flex:1;padding:10px;font-size:13px;" onclick="switchTab('notifs')">Notifications <span id="notif-count"></span></button>
+    <button id="tab-r-btn" class="btn btn-outline" style="flex:1;padding:10px;font-size:13px;" onclick="switchTab('recap')">Récap</button>
+  </div>
+  <div id="tab-tournees"><div id="admin-chauffeurs-list"><div class="loading">Chargement...</div></div></div>
+  <div id="tab-notifs" style="display:none;"><div id="notifs-list"><div class="loading">Chargement...</div></div></div>
+  <div id="tab-recap" style="display:none;">
+    <div class="card" style="margin-bottom:12px;">
+      <p class="label" style="margin-bottom:8px;">Sélectionner une date</p>
+      <div style="display:flex;gap:8px;">
+        <input type="date" id="recap-date" style="flex:1;"/>
+        <button class="btn-sm" style="background:#3b82f6;color:#fff;border:none;" onclick="loadRecap()">Voir</button>
+      </div>
+    </div>
+    <div id="recap-content"></div>
+  </div>
+</div>
+
+<!-- ADMIN TOURNEE -->
+<div id="screen-admin-tournee" class="screen">
+  <div class="row" style="margin-top:8px;margin-bottom:16px;">
+    <button class="back-btn" onclick="showScreen('admin-list')">‹</button>
+    <div><p class="label" style="margin-bottom:2px;">Tournée de</p><h2 id="admin-tournee-nom" style="font-size:17px;font-weight:700;"></h2></div>
+  </div>
+  <div id="admin-lien-chauffeur" class="card" style="background:#f0fdf4;border:1px solid #86efac;margin-bottom:14px;"></div>
+  <div id="admin-arrets-list"></div>
+  <button class="btn btn-outline" onclick="showAddClientModal()" style="margin-top:8px;">+ Ajouter un client</button>
+</div>
+
+<!-- MODAL SIGNATURE -->
 <div id="modal-sig" class="modal-overlay" style="display:none;">
   <div class="modal">
     <div class="modal-handle"></div>
-    <h3 class="mb12">Signature du client</h3>
-    <p class="label mb4">Nom du signataire</p>
-    <input id="sig-signataire" placeholder="Prénom NOM" class="mb12" />
-    <p class="label mb4">Signature</p>
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">Signature du client</h3>
+    <p class="label" style="margin-bottom:4px;">Nom du signataire</p>
+    <input id="sig-signataire" placeholder="Prénom NOM" style="margin-bottom:12px;"/>
+    <p class="label" style="margin-bottom:4px;">Signature</p>
     <canvas id="sig-canvas" class="sig-canvas"></canvas>
     <div class="row" style="margin-top:12px;gap:8px;">
       <button class="btn-sm" onclick="clearCanvas()">Effacer</button>
@@ -253,18 +351,19 @@
   </div>
 </div>
 
+<!-- MODAL ADD CLIENT -->
 <div id="modal-add-client" class="modal-overlay" style="display:none;">
   <div class="modal">
     <div class="modal-handle"></div>
-    <h3 class="mb12">Ajouter un client</h3>
-    <p class="label mb4">Nom</p><input id="new-client-nom" placeholder="Nom du restaurant" class="mb8" />
-    <p class="label mb4">Adresse</p><input id="new-client-adresse" placeholder="Adresse" class="mb8" />
-    <div class="grid2 mb8">
-      <div><p class="label mb4">Code postal</p><input id="new-client-cp" placeholder="75001" /></div>
-      <div><p class="label mb4">Ville</p><input id="new-client-ville" placeholder="Paris" /></div>
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">Ajouter un client</h3>
+    <p class="label" style="margin-bottom:4px;">Nom</p><input id="new-nom" placeholder="Nom du restaurant" style="margin-bottom:8px;"/>
+    <p class="label" style="margin-bottom:4px;">Adresse</p><input id="new-adresse" placeholder="Adresse" style="margin-bottom:8px;"/>
+    <div class="grid2" style="margin-bottom:8px;">
+      <div><p class="label" style="margin-bottom:4px;">CP</p><input id="new-cp" placeholder="75001"/></div>
+      <div><p class="label" style="margin-bottom:4px;">Ville</p><input id="new-ville" placeholder="Paris"/></div>
     </div>
-    <p class="label mb4">Bidons sur place</p><input id="new-client-bidons" type="number" min="0" value="1" class="mb8" />
-    <p class="label mb4">Note chauffeur</p><textarea id="new-client-note" placeholder="Instructions..."></textarea>
+    <p class="label" style="margin-bottom:4px;">Bidons sur place</p><input id="new-bidons" type="number" min="0" value="1" style="margin-bottom:8px;"/>
+    <p class="label" style="margin-bottom:4px;">Note chauffeur</p><textarea id="new-note" placeholder="Instructions..."></textarea>
     <div class="row" style="margin-top:12px;gap:8px;">
       <button class="btn btn-outline" onclick="closeAddClientModal()" style="flex:1;padding:10px;">Annuler</button>
       <button class="btn btn-blue" onclick="saveNewClient()" style="flex:2;padding:10px;">Ajouter</button>
@@ -272,24 +371,24 @@
   </div>
 </div>
 
+<!-- MODAL EDIT CLIENT -->
 <div id="modal-edit-client" class="modal-overlay" style="display:none;">
   <div class="modal">
     <div class="modal-handle"></div>
-    <h3 class="mb12">Modifier le client</h3>
-    <input id="edit-client-id" type="hidden" />
-    <input id="edit-client-client-id" type="hidden" />
-    <p class="label mb4">Nom</p><input id="edit-client-nom" class="mb8" />
-    <p class="label mb4">Adresse</p><input id="edit-client-adresse" class="mb8" />
-    <div class="grid2 mb8">
-      <div><p class="label mb4">Code postal</p><input id="edit-client-cp" /></div>
-      <div><p class="label mb4">Ville</p><input id="edit-client-ville" /></div>
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">Modifier le client</h3>
+    <input id="edit-arret-id" type="hidden"/><input id="edit-client-id" type="hidden"/>
+    <p class="label" style="margin-bottom:4px;">Nom</p><input id="edit-nom" style="margin-bottom:8px;"/>
+    <p class="label" style="margin-bottom:4px;">Adresse</p><input id="edit-adresse" style="margin-bottom:8px;"/>
+    <div class="grid2" style="margin-bottom:8px;">
+      <div><p class="label" style="margin-bottom:4px;">CP</p><input id="edit-cp"/></div>
+      <div><p class="label" style="margin-bottom:4px;">Ville</p><input id="edit-ville"/></div>
     </div>
-    <p class="label mb4">Bidons sur place</p><input id="edit-client-bidons" type="number" min="0" class="mb8" />
-    <p class="label mb4">Note chauffeur</p><textarea id="edit-client-note" placeholder="Instructions..."></textarea>
+    <p class="label" style="margin-bottom:4px;">Bidons sur place</p><input id="edit-bidons" type="number" min="0" style="margin-bottom:8px;"/>
+    <p class="label" style="margin-bottom:4px;">Note chauffeur</p><textarea id="edit-note" placeholder="Instructions..."></textarea>
     <div class="row" style="margin-top:12px;gap:8px;justify-content:space-between;">
-      <button class="btn-sm btn-danger" onclick="deleteClientFromTournee()">Supprimer</button>
-      <div class="row gap8">
-        <button class="btn btn-outline" onclick="closeEditClientModal()" style="padding:10px 16px;">Annuler</button>
+      <button class="btn-sm btn-danger" onclick="deleteArret()">Supprimer</button>
+      <div class="row" style="gap:8px;">
+        <button class="btn btn-outline" onclick="closeEditModal()" style="padding:10px 16px;">Annuler</button>
         <button class="btn btn-blue" onclick="saveEditClient()" style="padding:10px 20px;">Enregistrer</button>
       </div>
     </div>
@@ -297,300 +396,217 @@
 </div>
 
 <script>
-const SUPABASE_URL = 'https://usjszwypepbtkmacblzk.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzanN6d3lwZXBidGttYWNibHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODM3MTYsImV4cCI6MjA4OTM1OTcxNn0.--c_djVnUAAsJ-LC35xxBwF3xvHbp27TwLdMC9Pkn9Q';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://usjszwypepbtkmacblzk.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzanN6d3lwZXBidGttYWNibHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODM3MTYsImV4cCI6MjA4OTM1OTcxNn0.--c_djVnUAAsJ-LC35xxBwF3xvHbp27TwLdMC9Pkn9Q';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+emailjs.init('djWUC21rq-kYIXxmq');
 
-const CHECKLIST = [
-  { id: 'chaussures', icon: '👟', label: 'Je porte mes chaussures de sécurité' },
-  { id: 'gants',      icon: '🧤', label: 'J\'ai ma paire de gants fournie' },
-  { id: 'absorbant',  icon: '🧽', label: 'J\'ai mon absorbant' },
-  { id: 'chariot',    icon: '🛒', label: 'J\'ai mon chariot de manutention' },
-  { id: 'sacs',       icon: '🗑️', label: 'J\'ai mes sacs poubelles' },
-];
+const CHAUFFEURS_CONFIG={
+  'adam':{nom:'Adam',avatar:'AD'},
+  'michael':{nom:'Michael',avatar:'MI'},
+  'karim':{nom:'Karim',avatar:'KA'},
+  'joan':{nom:'Joan',avatar:'JO'},
+};
+const COLORS=['#3b82f6','#8b5cf6','#10b981','#f59e0b'];
+const getColor=slug=>COLORS[Object.keys(CHAUFFEURS_CONFIG).indexOf(slug)%COLORS.length];
+const BIDON_COLORS={b60:'#3b82f6',b80:'#8b5cf6',b120:'#10b981',b150:'#f59e0b'};
+const BIDON_LABELS={b60:'60 L',b80:'80 L (Poubelle)',b120:'120 L',b150:'150 L'};
+const NIVEAUX=[{val:0,label:'0'},{val:0.25,label:'¼'},{val:0.5,label:'½'},{val:0.75,label:'¾'},{val:1,label:'Full'}];
 
-const CHAUFFEURS_CONFIG = {
-  'adam':    { nom: 'Adam',    avatar: 'AD' },
-  'michael': { nom: 'Michael', avatar: 'MI' },
-  'karim':   { nom: 'Karim',   avatar: 'KA' },
-  'joan':    { nom: 'Joan',    avatar: 'JO' },
-  'denis':   { nom: 'Denis',   avatar: 'DE' },
+let state={
+  chauffeurs:[],currentChauffeur:null,currentSlug:null,
+  currentTournee:null,arrets:[],currentArretIdx:null,
+  bidons:[],photoArret:null,signatureData:null,signataireNom:'',
+  photos:{compteur:null,selfie:null,camion:null,retour:null},
+  kmDepart:null,sigDrawn:false,adminTab:'tournees'
 };
 
-const COLORS = ['#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444'];
-const getColor = (slug) => COLORS[Object.keys(CHAUFFEURS_CONFIG).indexOf(slug) % COLORS.length];
+function getTodayStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 
-let state = {
-  chauffeurs: [], currentChauffeur: null, currentTournee: null,
-  arrets: [], currentArretIdx: null, bidons: [],
-  photoData: null, signatureData: null, signataireNom: '',
-  adminSelectedChauffeur: null, sigDrawn: false,
-  kmPhotoData: null, kmDepart: null
-};
-
-function getTodayStr() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${day}`;
-}
-
-window.addEventListener('DOMContentLoaded', async () => {
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get('c')?.toLowerCase();
-  console.log('Slug détecté:', slug);
-  console.log('Date aujourd hui:', getTodayStr());
-
-  if (slug && CHAUFFEURS_CONFIG[slug]) {
+window.addEventListener('DOMContentLoaded',async()=>{
+  const params=new URLSearchParams(window.location.search);
+  const slug=params.get('c')?.toLowerCase();
+  if(slug&&CHAUFFEURS_CONFIG[slug]){
     showScreen('chauffeur-loading');
-    const { data: chauffeurs } = await sb.from('chauffeurs').select('*');
-    console.log('Chauffeurs:', chauffeurs);
-    state.chauffeurs = chauffeurs || [];
-    const cfg = CHAUFFEURS_CONFIG[slug];
-    const chauffeur = state.chauffeurs.find(c => c.nom.toLowerCase() === cfg.nom.toLowerCase());
-    console.log('Chauffeur trouvé:', chauffeur);
-    if (chauffeur) {
-      state.currentChauffeur = chauffeur;
-      showChecklist();
-    } else {
-      alert('Chauffeur introuvable');
-      showScreen('home');
-    }
-  } else {
-    showScreen('home');
-  }
+    const{data}=await sb.from('chauffeurs').select('*');
+    state.chauffeurs=data||[];
+    const cfg=CHAUFFEURS_CONFIG[slug];
+    const ch=state.chauffeurs.find(c=>c.nom.toLowerCase()===cfg.nom.toLowerCase());
+    if(ch){state.currentChauffeur=ch;state.currentSlug=slug;showScreen('checklist');}
+    else{alert('Chauffeur introuvable');showScreen('home');}
+  } else showScreen('home');
 });
 
-function showChecklist() {
-  const el = document.getElementById('checklist-items');
-  el.innerHTML = CHECKLIST.map(item => `
-    <label style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f3f4f6;cursor:pointer;">
-      <input type="checkbox" id="check-${item.id}" style="width:20px;height:20px;cursor:pointer;accent-color:#3b82f6;flex-shrink:0;" />
-      <span style="font-size:20px;">${item.icon}</span>
-      <span style="font-size:14px;font-weight:500;">${item.label}</span>
-    </label>
-  `).join('');
-  showScreen('checklist');
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  window.scrollTo(0,0);
+  if(name==='admin-list')renderAdminList();
+  if(name==='fin-tournee')updateFinRecap();
 }
 
-async function validateChecklist() {
-  const allChecked = CHECKLIST.every(item => document.getElementById('check-' + item.id)?.checked);
-  const km = document.getElementById('km-input').value.trim();
-  const kmPhoto = state.kmPhotoData;
+// ── CHECKLIST ──────────────────────────────────────────────────
+function handleChecklistPhoto(type){
+  const input=document.getElementById(`photo-${type}-input`);
+  const f=input.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    state.photos[type]=ev.target.result;
+    document.getElementById(`photo-${type}-img`).src=ev.target.result;
+    document.getElementById(`photo-${type}-preview`).style.display='block';
+    document.getElementById(`photo-${type}-zone`).style.display='none';
+  };
+  r.readAsDataURL(f);
+}
+function removeChecklistPhoto(type){
+  state.photos[type]=null;
+  document.getElementById(`photo-${type}-preview`).style.display='none';
+  document.getElementById(`photo-${type}-zone`).style.display='block';
+}
 
-  if (!allChecked) {
-    document.getElementById('checklist-error').textContent = 'Vous devez cocher tous les éléments avant de continuer.';
-    document.getElementById('checklist-error').style.display = 'block';
-    return;
-  }
-  if (!km) {
-    document.getElementById('checklist-error').textContent = 'Veuillez saisir le kilométrage du camion.';
-    document.getElementById('checklist-error').style.display = 'block';
-    return;
-  }
-  if (!kmPhoto) {
-    document.getElementById('checklist-error').textContent = 'Veuillez prendre une photo du compteur kilométrique.';
-    document.getElementById('checklist-error').style.display = 'block';
-    return;
-  }
-
-  document.getElementById('checklist-error').style.display = 'none';
-  state.kmDepart = km;
+async function validateChecklist(){
+  const checks=['chaussures','gants','tenue','absorbant','chariot','sacs','huile','ceinture'];
+  const allChecked=checks.every(id=>document.getElementById('chk-'+id)?.checked);
+  const km=document.getElementById('km-depart').value.trim();
+  const err=document.getElementById('checklist-error');
+  if(!allChecked){err.textContent='Cochez tous les équipements avant de continuer.';err.style.display='block';return;}
+  if(!km){err.textContent='Saisissez le kilométrage de départ.';err.style.display='block';return;}
+  if(!state.photos.compteur){err.textContent='Prenez une photo du compteur kilométrique.';err.style.display='block';return;}
+  if(!state.photos.selfie){err.textContent='Prenez un selfie.';err.style.display='block';return;}
+  if(!state.photos.camion){err.textContent='Prenez une photo du camion.';err.style.display='block';return;}
+  err.style.display='none';
+  state.kmDepart=km;
   showScreen('chauffeur-loading');
   await loadTournee(state.currentChauffeur.id);
 }
 
-function showScreen(name) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-  window.scrollTo(0, 0);
-  if (name === 'admin-list') renderAdminList();
-}
-
-async function loadTournee(chauffeurId) {
-  const today = getTodayStr();
-  console.log('Recherche tournée pour chauffeur', chauffeurId, 'date', today);
-  const { data: tournees, error } = await sb.from('tournees').select('*').eq('chauffeur_id', chauffeurId).eq('date', today);
-  console.log('Tournées trouvées:', tournees, 'Erreur:', error);
-
-  let tournee = tournees && tournees.length > 0 ? tournees[0] : null;
-
-  if (!tournee) {
-    console.log('Pas de tournée, création...');
-    const { data: newT } = await sb.from('tournees').insert({ chauffeur_id: chauffeurId, date: today }).select().single();
-    tournee = newT;
-    console.log('Nouvelle tournée:', newT);
-  }
-
-  state.currentTournee = tournee;
-  await loadArrets(tournee.id);
+// ── TOURNEE ────────────────────────────────────────────────────
+async function loadTournee(chauffeurId){
+  const today=getTodayStr();
+  const{data:ts}=await sb.from('tournees').select('*').eq('chauffeur_id',chauffeurId).eq('date',today);
+  let t=ts&&ts.length>0?ts[0]:null;
+  if(!t){const{data:nt}=await sb.from('tournees').insert({chauffeur_id:chauffeurId,date:today}).select().single();t=nt;}
+  state.currentTournee=t;
+  await loadArrets(t.id);
   showScreen('tournee');
 }
 
-async function loadArrets(tourneeId) {
-  console.log('Chargement arrêts pour tournée', tourneeId);
-  const { data, error } = await sb.from('arrets')
-    .select('*, clients(*), bidons_collectes(*)')
-    .eq('tournee_id', tourneeId)
-    .order('ordre');
-  console.log('Arrêts:', data, 'Erreur:', error);
-  state.arrets = data || [];
+async function loadArrets(tourneeId){
+  const{data}=await sb.from('arrets').select('*,clients(*),bidons_collectes(*)').eq('tournee_id',tourneeId).order('ordre');
+  state.arrets=data||[];
   renderTournee();
 }
 
-function renderTournee() {
-  const c = state.currentChauffeur;
-  const arrets = state.arrets;
-  document.getElementById('tournee-titre').textContent = `Bonjour, ${c.nom} 👋`;
-  document.getElementById('tournee-date').textContent = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' });
-  const done = arrets.filter(a => a.statut === 'valide').length;
-  const total = arrets.length;
-  const pct = total ? Math.round(done/total*100) : 0;
-  const vol = arrets.filter(a => a.statut === 'valide').reduce((acc,a) => acc + (a.bidons_collectes||[]).reduce((s,b) => s + Math.round(b.volume*b.niveau),0), 0);
-  document.getElementById('hero-progress-text').textContent = `${done}/${total} validés`;
-  document.getElementById('hero-volume').textContent = vol > 0 ? `${vol} L collectés` : '';
-  document.getElementById('hero-bar').style.width = pct + '%';
-  const activeIdx = arrets.findIndex(a => a.statut !== 'valide');
-  const el = document.getElementById('arrets-list');
-
-  if (!arrets.length) {
-    el.innerHTML = `<div class="card" style="text-align:center;padding:2rem;color:#6b7280;">
-      <div style="font-size:32px;margin-bottom:8px;">📋</div>
-      <p style="font-weight:700;">Aucun arrêt pour aujourd'hui</p>
-      <p style="font-size:13px;margin-top:4px;">Contactez votre gestionnaire</p>
-    </div>`;
-    return;
-  }
-
-  el.innerHTML = arrets.map((a,i) => {
-    const isActive = i === activeIdx, isDone = a.statut === 'valide', isLocked = !isDone && !isActive;
-    const numBg = isDone ? '#d1fae5' : isActive ? '#dbeafe' : '#f3f4f6';
-    const numColor = isDone ? '#059669' : isActive ? '#2563eb' : '#9ca3af';
-    const numLabel = isDone ? '✓' : isLocked ? '🔒' : i+1;
-    const note = a.clients?.note ? `<p style="font-size:11px;color:#f59e0b;font-style:italic;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">📌 ${a.clients.note}</p>` : '';
-    const badge = isActive ? '<span class="badge badge-blue">En cours</span>' : isDone ? '<span class="badge badge-green">Validé</span>' : '';
+function renderTournee(){
+  const c=state.currentChauffeur,arrets=state.arrets;
+  document.getElementById('tournee-titre').textContent=`Bonjour, ${c.nom} 👋`;
+  document.getElementById('tournee-date').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  const done=arrets.filter(a=>a.statut==='valide').length,total=arrets.length;
+  const vol=arrets.filter(a=>a.statut==='valide').reduce((acc,a)=>acc+(a.bidons_collectes||[]).reduce((s,b)=>s+Math.round(b.volume*b.niveau),0),0);
+  document.getElementById('hero-progress-text').textContent=`${done}/${total} validés`;
+  document.getElementById('hero-volume').textContent=vol>0?`${vol} L`:'';
+  document.getElementById('hero-bar').style.width=total?Math.round(done/total*100)+'%':'0%';
+  const activeIdx=arrets.findIndex(a=>a.statut!=='valide');
+  const btnFin=document.getElementById('btn-fin-tournee-container');
+  btnFin.style.display=done===total&&total>0?'block':'none';
+  const el=document.getElementById('arrets-list');
+  if(!arrets.length){el.innerHTML=`<div class="card" style="text-align:center;padding:2rem;color:#6b7280;"><div style="font-size:32px;margin-bottom:8px;">📋</div><p style="font-weight:700;">Aucun arrêt aujourd'hui</p><p style="font-size:13px;margin-top:4px;">Contactez votre gestionnaire</p></div>`;return;}
+  el.innerHTML=arrets.map((a,i)=>{
+    const isActive=i===activeIdx,isDone=a.statut==='valide',isLocked=!isDone&&!isActive;
+    const numBg=isDone?'#d1fae5':isActive?'#dbeafe':'#f3f4f6';
+    const numColor=isDone?'#059669':isActive?'#2563eb':'#9ca3af';
+    const note=a.clients?.note?`<p style="font-size:11px;color:#f59e0b;font-style:italic;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">📌 ${a.clients.note}</p>`:'';
+    const badge=isActive?'<span class="badge badge-blue">En cours</span>':isDone?'<span class="badge badge-green">Validé</span>':'';
     return `<div class="card row" style="${isActive?'border:2px solid #3b82f6;':''}${isLocked?'opacity:0.4;':''}cursor:${isLocked?'default':'pointer'};" onclick="${isLocked?'':` openArret(${i})`}">
-      <div class="circle-num" style="background:${numBg};color:${numColor};">${numLabel}</div>
+      <div class="circle-num" style="background:${numBg};color:${numColor};">${isDone?'✓':isLocked?'🔒':i+1}</div>
       <div style="flex:1;min-width:0;">
         <p style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.clients?.nom||''}</p>
-        <p style="color:#6b7280;font-size:12px;">${a.clients?.cp||''} ${a.clients?.ville||''}</p>
-        ${note}
-      </div>
-      ${badge}
+        <p style="color:#6b7280;font-size:12px;">${a.clients?.cp||''} ${a.clients?.ville||''}</p>${note}
+      </div>${badge}
     </div>`;
   }).join('');
-
-  if (done === total && total > 0) {
-    el.innerHTML += `<div style="text-align:center;padding:1.5rem;background:#d1fae5;border-radius:14px;margin-top:8px;">
-      <div style="font-size:28px;margin-bottom:6px;">🎉</div>
-      <p style="font-weight:800;color:#059669;font-size:16px;">Tournée terminée !</p>
-      <p style="color:#059669;font-size:13px;margin-top:4px;">Total : ${vol} L collectés</p>
-    </div>`;
-  }
 }
 
-async function openArret(idx) {
-  const a = state.arrets[idx]; if (!a) return;
-  state.currentArretIdx = idx;
-  state.bidons = a.bidons_collectes ? [...a.bidons_collectes] : [];
-  state.photoData = null;
-  state.signatureData = a.signature_url || null;
-  state.signataireNom = a.signataire || '';
-  document.getElementById('arret-num').textContent = `ARRÊT ${idx+1} / ${state.arrets.length}`;
-  document.getElementById('arret-nom').textContent = a.clients?.nom || '';
-  document.getElementById('arret-adresse').textContent = a.clients?.adresse || '';
-  document.getElementById('arret-cp-ville').textContent = `${a.clients?.cp||''} ${a.clients?.ville||''}`;
-  const bp = a.clients?.bidons_place || 0;
-  document.getElementById('arret-bidons-place').textContent = bp > 0 ? `🛢 ${bp} bidon${bp>1?'s':''} sur place` : '';
-  const note = a.clients?.note;
-  document.getElementById('arret-note-banner').style.display = note ? 'block' : 'none';
-  if (note) document.getElementById('arret-note-text').textContent = note;
-  document.getElementById('arret-commentaire').value = a.commentaire || '';
-  renderBidons(); renderSigState(); updateValidateBtn();
+// ── ARRET ──────────────────────────────────────────────────────
+async function openArret(idx){
+  const a=state.arrets[idx]; if(!a)return;
+  state.currentArretIdx=idx;
+  state.bidons=a.bidons_collectes?[...a.bidons_collectes]:[];
+  state.photoArret=null;
+  state.signatureData=a.signature_url||null;
+  state.signataireNom=a.signataire||'';
+  document.getElementById('arret-num').textContent=`ARRÊT ${idx+1} / ${state.arrets.length}`;
+  document.getElementById('arret-nom').textContent=a.clients?.nom||'';
+  document.getElementById('arret-adresse').textContent=a.clients?.adresse||'';
+  document.getElementById('arret-cp-ville').textContent=`${a.clients?.cp||''} ${a.clients?.ville||''}`;
+  const bp=a.clients?.bidons_place||0;
+  document.getElementById('arret-bidons-place').textContent=bp>0?`🛢 ${bp} bidon${bp>1?'s':''} sur place`:'';
+  const note=a.clients?.note;
+  document.getElementById('arret-note-banner').style.display=note?'block':'none';
+  if(note)document.getElementById('arret-note-text').textContent=note;
+  document.getElementById('arret-commentaire').value=a.commentaire||'';
+  document.getElementById('photo-arret-preview').style.display='none';
+  document.getElementById('photo-arret-btn').style.display='block';
+  renderBidons();renderSigState();updateValidateBtn();
   showScreen('arret');
 }
 
-function launchWaze() {
-  const a = state.arrets[state.currentArretIdx];
-  const q = encodeURIComponent(`${a.clients.adresse} ${a.clients.cp} ${a.clients.ville}`);
-  const iframe = document.createElement('iframe'); iframe.style.display='none'; document.body.appendChild(iframe);
-  iframe.src = `waze://?q=${q}&navigate=yes`;
-  setTimeout(() => { document.body.removeChild(iframe); window.open(`https://waze.com/ul?q=${q}&navigate=yes`, '_blank'); }, 1500);
+function launchNav(app){
+  const a=state.arrets[state.currentArretIdx];
+  const q=encodeURIComponent(`${a.clients.adresse} ${a.clients.cp} ${a.clients.ville}`);
+  const iframe=document.createElement('iframe');iframe.style.display='none';document.body.appendChild(iframe);
+  if(app==='waze'){iframe.src=`waze://?q=${q}&navigate=yes`;setTimeout(()=>{document.body.removeChild(iframe);window.open(`https://waze.com/ul?q=${q}&navigate=yes`,'_blank');},1500);}
+  else{document.body.removeChild(iframe);window.open(`https://www.google.com/maps/dir/?api=1&destination=${q}`,'_blank');}
 }
-function toggleManuel() { const el = document.getElementById('manuel-input'); el.style.display = el.style.display==='none'?'block':'none'; }
-function launchWazeManuel() {
-  const q = encodeURIComponent(document.getElementById('manuel-adresse').value);
-  const iframe = document.createElement('iframe'); iframe.style.display='none'; document.body.appendChild(iframe);
-  iframe.src = `waze://?q=${q}&navigate=yes`;
-  setTimeout(() => { document.body.removeChild(iframe); window.open(`https://waze.com/ul?q=${q}&navigate=yes`, '_blank'); }, 1500);
-}
+function toggleManuel(){const el=document.getElementById('manuel-input');el.style.display=el.style.display==='none'?'block':'none';}
+function launchNavManuel(){const q=encodeURIComponent(document.getElementById('manuel-adresse').value);window.open(`https://www.google.com/maps/dir/?api=1&destination=${q}`,'_blank');}
 
-const BIDON_COLORS = {b60:'#3b82f6',b80:'#8b5cf6',b120:'#10b981',b150:'#f59e0b'};
-const BIDON_LABELS = {b60:'60 L',b80:'80 L (Poubelle)',b120:'120 L',b150:'150 L'};
-const NIVEAUX = [{val:0,label:'0'},{val:0.25,label:'¼'},{val:0.5,label:'½'},{val:0.75,label:'¾'},{val:1,label:'Full'}];
-
-function addBidon(typeId, volume) { state.bidons.push({id:Date.now(),type_id:typeId,volume,niveau:null}); renderBidons(); updateValidateBtn(); }
-function removeBidon(idx) { state.bidons.splice(idx,1); renderBidons(); updateValidateBtn(); }
-function setNiveau(idx,val) { state.bidons[idx].niveau=val; renderBidons(); updateValidateBtn(); }
-
-function renderBidons() {
-  const el = document.getElementById('bidons-list');
-  if (!state.bidons.length) { el.innerHTML=''; return; }
-  el.innerHTML = state.bidons.map((b,i) => {
-    const color = BIDON_COLORS[b.type_id]||'#6b7280', label = BIDON_LABELS[b.type_id]||b.volume+' L';
-    const niveauxHTML = NIVEAUX.map(n => `<button class="niveau-btn ${b.niveau===n.val?'active':''}" style="${b.niveau===n.val?`background:${color};`:''}" onclick="setNiveau(${i},${n.val})">${n.label}</button>`).join('');
+// ── BIDONS ─────────────────────────────────────────────────────
+function addBidon(typeId,volume){state.bidons.push({id:Date.now(),type_id:typeId,volume,niveau:null});renderBidons();updateValidateBtn();}
+function removeBidon(idx){state.bidons.splice(idx,1);renderBidons();updateValidateBtn();}
+function setNiveau(idx,val){state.bidons[idx].niveau=val;renderBidons();updateValidateBtn();}
+function renderBidons(){
+  const el=document.getElementById('bidons-list');
+  if(!state.bidons.length){el.innerHTML='';return;}
+  el.innerHTML=state.bidons.map((b,i)=>{
+    const color=BIDON_COLORS[b.type_id]||'#6b7280',label=BIDON_LABELS[b.type_id]||b.volume+' L';
+    const nHTML=NIVEAUX.map(n=>`<button class="niveau-btn ${b.niveau===n.val?'active':''}" style="${b.niveau===n.val?`background:${color};color:#fff;border-color:${color};`:''}" onclick="setNiveau(${i},${n.val})">${n.label}</button>`).join('');
     return `<div style="background:#f8fafc;border:1.5px solid ${color}44;border-radius:12px;padding:12px 14px;margin-bottom:10px;">
-      <div class="row-between mb8">
-        <div class="row gap8"><div style="width:10px;height:10px;border-radius:50%;background:${color};"></div><span style="font-weight:700;">${label}</span></div>
+      <div class="row-between" style="margin-bottom:10px;">
+        <div class="row" style="gap:8px;"><div style="width:10px;height:10px;border-radius:50%;background:${color};"></div><span style="font-weight:700;">${label}</span></div>
         <button class="btn-sm btn-danger" onclick="removeBidon(${i})">Retirer</button>
       </div>
-      <p class="label mb4">Niveau de remplissage</p>
-      <div class="grid5">${niveauxHTML}</div>
+      <p class="label" style="margin-bottom:6px;">Niveau de remplissage</p>
+      <div class="grid5">${nHTML}</div>
       ${b.niveau!==null?`<p style="font-size:12px;color:${color};font-weight:700;margin-top:8px;">Volume : ${Math.round(b.volume*b.niveau)} L (${Math.round(b.niveau*100)}%)</p>`:''}
     </div>`;
   }).join('');
 }
 
-function handleKmPhoto(e) {
-  const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => {
-    state.kmPhotoData = ev.target.result;
-    document.getElementById('km-photo-img').src = ev.target.result;
-    document.getElementById('km-photo-preview').style.display = 'block';
-    document.getElementById('km-photo-btn').style.display = 'none';
-  };
-  r.readAsDataURL(f);
+// ── PHOTO ARRET ────────────────────────────────────────────────
+function handleArretPhoto(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{state.photoArret=ev.target.result;document.getElementById('photo-arret-img').src=ev.target.result;document.getElementById('photo-arret-preview').style.display='block';document.getElementById('photo-arret-btn').style.display='none';};r.readAsDataURL(f);
 }
-function removeKmPhoto() {
-  state.kmPhotoData = null;
-  document.getElementById('km-photo-preview').style.display = 'none';
-  document.getElementById('km-photo-btn').style.display = 'block';
-}
+function removeArretPhoto(){state.photoArret=null;document.getElementById('photo-arret-preview').style.display='none';document.getElementById('photo-arret-btn').style.display='block';}
 
-function handlePhoto(e) {
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader(); r.onload=ev=>{state.photoData=ev.target.result;document.getElementById('photo-img').src=ev.target.result;document.getElementById('photo-preview').style.display='block';document.getElementById('photo-btn').style.display='none';}; r.readAsDataURL(f);
-}
-function removePhoto() { state.photoData=null; document.getElementById('photo-preview').style.display='none'; document.getElementById('photo-btn').style.display='block'; }
-
+// ── SIGNATURE ──────────────────────────────────────────────────
 let sigDrawing=false;
-function openSigModal() {
+function openSigModal(){
   document.getElementById('modal-sig').style.display='flex';
   setTimeout(()=>{
-    const canvas=document.getElementById('sig-canvas'); canvas.width=canvas.offsetWidth; canvas.height=130;
-    const ctx=canvas.getContext('2d'); state.sigDrawn=false;
+    const canvas=document.getElementById('sig-canvas');canvas.width=canvas.offsetWidth;canvas.height=130;
+    const ctx=canvas.getContext('2d');state.sigDrawn=false;
     const getPos=(e,c)=>{const r=c.getBoundingClientRect(),s=e.touches?e.touches[0]:e;return{x:(s.clientX-r.left)*(c.width/r.width),y:(s.clientY-r.top)*(c.height/r.height)};};
-    canvas.onmousedown=canvas.ontouchstart=(e)=>{e.preventDefault();sigDrawing=true;const p=getPos(e,canvas);ctx.beginPath();ctx.moveTo(p.x,p.y);};
-    canvas.onmousemove=canvas.ontouchmove=(e)=>{e.preventDefault();if(!sigDrawing)return;const p=getPos(e,canvas);ctx.lineWidth=2.5;ctx.lineCap='round';ctx.strokeStyle='#1a1a1a';ctx.lineTo(p.x,p.y);ctx.stroke();state.sigDrawn=true;};
-    canvas.onmouseup=canvas.ontouchend=(e)=>{e.preventDefault();sigDrawing=false;};
+    canvas.onmousedown=canvas.ontouchstart=e=>{e.preventDefault();sigDrawing=true;const p=getPos(e,canvas);ctx.beginPath();ctx.moveTo(p.x,p.y);};
+    canvas.onmousemove=canvas.ontouchmove=e=>{e.preventDefault();if(!sigDrawing)return;const p=getPos(e,canvas);ctx.lineWidth=2.5;ctx.lineCap='round';ctx.strokeStyle='#1a1a1a';ctx.lineTo(p.x,p.y);ctx.stroke();state.sigDrawn=true;};
+    canvas.onmouseup=canvas.ontouchend=e=>{e.preventDefault();sigDrawing=false;};
   },100);
 }
-function clearCanvas(){const c=document.getElementById('sig-canvas');c.getContext('2d').clearRect(0,0,c.width,c.height);state.sigDrawn=false;}
+function clearCanvas(){document.getElementById('sig-canvas').getContext('2d').clearRect(0,0,400,130);state.sigDrawn=false;}
 function closeSigModal(){document.getElementById('modal-sig').style.display='none';}
 function confirmSignature(){
-  if(!state.sigDrawn||!document.getElementById('sig-signataire').value.trim()){alert('Veuillez dessiner la signature et entrer un nom.');return;}
+  if(!state.sigDrawn||!document.getElementById('sig-signataire').value.trim()){alert('Signature et nom requis.');return;}
   state.signatureData=document.getElementById('sig-canvas').toDataURL();
   state.signataireNom=document.getElementById('sig-signataire').value.trim();
   closeSigModal();renderSigState();updateValidateBtn();
@@ -603,11 +619,12 @@ function renderSigState(){
   if(done){document.getElementById('sig-img').src=state.signatureData;document.getElementById('sig-nom').textContent=`Signé par ${state.signataireNom}`;}
 }
 
+// ── VALIDATION ARRET ───────────────────────────────────────────
 function updateValidateBtn(){
-  const canVal=state.bidons.length>0&&state.bidons.every(b=>b.niveau!==null)&&state.signatureData;
-  document.getElementById('btn-valider').className='btn '+(canVal?'btn-green':'btn-gray');
+  const ok=state.bidons.length>0&&state.bidons.every(b=>b.niveau!==null)&&state.signatureData;
+  document.getElementById('btn-valider').className='btn '+(ok?'btn-green':'btn-gray');
   const err=document.getElementById('validate-error');
-  if(!canVal){err.textContent=!state.bidons.length?'Ajoutez au moins un bidon':state.bidons.some(b=>b.niveau===null)?'Renseignez le niveau de tous les bidons':'La signature du client est obligatoire';err.style.display='block';}
+  if(!ok){err.textContent=!state.bidons.length?'Ajoutez au moins un bidon':state.bidons.some(b=>b.niveau===null)?'Renseignez le niveau de tous les bidons':'La signature du client est obligatoire';err.style.display='block';}
   else err.style.display='none';
 }
 
@@ -615,13 +632,85 @@ async function validerArret(){
   if(!state.bidons.length||state.bidons.some(b=>b.niveau===null)||!state.signatureData)return;
   const a=state.arrets[state.currentArretIdx];
   const heure=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  await sb.from('arrets').update({statut:'valide',commentaire:document.getElementById('arret-commentaire').value,signataire:state.signataireNom,signature_url:state.signatureData,photo_url:state.photoData||'',heure_validation:heure}).eq('id',a.id);
+  await sb.from('arrets').update({statut:'valide',commentaire:document.getElementById('arret-commentaire').value,signataire:state.signataireNom,signature_url:state.signatureData,photo_url:state.photoArret||'',heure_validation:heure}).eq('id',a.id);
   await sb.from('bidons_collectes').delete().eq('arret_id',a.id);
-  if(state.bidons.length>0) await sb.from('bidons_collectes').insert(state.bidons.map(b=>({arret_id:a.id,type_id:b.type_id,volume:b.volume,niveau:b.niveau})));
+  if(state.bidons.length>0)await sb.from('bidons_collectes').insert(state.bidons.map(b=>({arret_id:a.id,type_id:b.type_id,volume:b.volume,niveau:b.niveau})));
   await loadArrets(state.currentTournee.id);
   showScreen('tournee');
 }
 
+// ── FIN TOURNEE ────────────────────────────────────────────────
+function updateFinRecap(){
+  const done=state.arrets.filter(a=>a.statut==='valide').length;
+  const vol=state.arrets.reduce((acc,a)=>acc+(a.bidons_collectes||[]).reduce((s,b)=>s+Math.round(b.volume*b.niveau),0),0);
+  document.getElementById('fin-recap-rapide').textContent=`${done} arrêts validés · ${vol} L collectés`;
+  const kmR=document.getElementById('km-retour');
+  kmR.oninput=()=>{
+    const kmCalc=document.getElementById('km-calcul');
+    const diff=parseInt(kmR.value)-(parseInt(state.kmDepart)||0);
+    if(kmR.value&&diff>0){kmCalc.textContent=`Km parcourus : ${diff} km`;kmCalc.style.display='block';}
+    else kmCalc.style.display='none';
+  };
+}
+
+async function validerFinTournee(){
+  const kmRetour=document.getElementById('km-retour').value.trim();
+  const err=document.getElementById('fin-error');
+  if(!kmRetour){err.textContent='Saisissez le kilométrage de retour.';err.style.display='block';return;}
+  if(!state.photos.retour){err.textContent='Prenez une photo du compteur retour.';err.style.display='block';return;}
+  err.style.display='none';
+
+  const kmTotal=parseInt(kmRetour)-(parseInt(state.kmDepart)||0);
+  const vol=state.arrets.reduce((acc,a)=>acc+(a.bidons_collectes||[]).reduce((s,b)=>s+Math.round(b.volume*b.niveau),0),0);
+  const done=state.arrets.filter(a=>a.statut==='valide').length;
+  const today=getTodayStr();
+
+  // Sauvegarder notification dans Supabase
+  try {
+    await sb.from('notifications').insert({
+      chauffeur_nom:state.currentChauffeur.nom,
+      date:today,
+      km_depart:state.kmDepart,
+      km_retour:kmRetour,
+      km_total:kmTotal,
+      nb_arrets:done,
+      volume_total:vol,
+      detail:JSON.stringify(state.arrets.map(a=>({
+        nom:a.clients?.nom,adresse:a.clients?.adresse,
+        bidons:a.bidons_collectes,commentaire:a.commentaire,
+        signataire:a.signataire,heure:a.heure_validation
+      }))),
+      lu:false
+    });
+  } catch(e){console.log('Notification:', e);}
+
+  // Email via EmailJS
+  const detailText=state.arrets.map((a,i)=>{
+    const v=(a.bidons_collectes||[]).reduce((s,b)=>s+Math.round(b.volume*b.niveau),0);
+    const b=(a.bidons_collectes||[]).map(b=>`${b.volume}L à ${Math.round(b.niveau*100)}%`).join(', ');
+    return `${i+1}. ${a.clients?.nom||'—'} (${a.clients?.cp||''} ${a.clients?.ville||''})\n   Bidons: ${b||'—'} → ${v}L\n   ${a.commentaire?`Note: ${a.commentaire}\n   `:''}Signé par: ${a.signataire||'—'} à ${a.heure_validation||'—'}`;
+  }).join('\n\n');
+
+  try {
+    await emailjs.send('service_c0ytsw7','template_ywe8rc8',{
+      chauffeur:state.currentChauffeur.nom,
+      date:new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),
+      km_depart:state.kmDepart+' km',
+      km_retour:kmRetour+' km',
+      km_total:kmTotal+' km parcourus',
+      nb_arrets:`${done}/${state.arrets.length}`,
+      volume_total:vol+' L',
+      detail_arrets:detailText,
+      message:`Tournée de ${state.currentChauffeur.nom} terminée.\n\nKm départ: ${state.kmDepart}\nKm retour: ${kmRetour}\nKm parcourus: ${kmTotal}\nArrêts: ${done}/${state.arrets.length}\nVolume: ${vol}L\n\nDÉTAIL:\n${detailText}`
+    });
+    console.log('Email envoyé');
+  } catch(e){console.log('Email error:',e);}
+
+  alert(`Tournée validée ! Un récap a été envoyé au gestionnaire.\n\nKm parcourus : ${kmTotal} km\nVolume collecté : ${vol} L`);
+  showScreen('home');
+}
+
+// ── ADMIN ──────────────────────────────────────────────────────
 function checkAdmin(){
   if(document.getElementById('admin-pwd').value==='Denismarvin77&'){
     document.getElementById('admin-error').style.display='none';
@@ -630,16 +719,83 @@ function checkAdmin(){
   } else document.getElementById('admin-error').style.display='block';
 }
 
-function renderAdminList(){
+function switchTab(tab){
+  ['tournees','notifs','recap'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===tab?'block':'none';
+    document.getElementById('tab-'+t[0]+'-btn').className='btn '+(t===tab?'btn-blue':'btn-outline');
+    document.getElementById('tab-'+t[0]+'-btn').style.padding='10px';
+    document.getElementById('tab-'+t[0]+'-btn').style.fontSize='13px';
+  });
+  if(tab==='notifs')loadNotifs();
+  if(tab==='recap'){document.getElementById('recap-date').value=getTodayStr();loadRecap();}
+}
+
+async function loadNotifs(){
+  const el=document.getElementById('notifs-list');
+  el.innerHTML='<div class="loading">Chargement...</div>';
+  try {
+    const{data}=await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(20);
+    const notifs=data||[];
+    const unread=notifs.filter(n=>!n.lu).length;
+    document.getElementById('notif-count').innerHTML=unread>0?`<span class="notif-dot"></span>`:'';
+    if(!notifs.length){el.innerHTML='<div class="loading">Aucune notification</div>';return;}
+    el.innerHTML=notifs.map(n=>`
+      <div class="card" style="${!n.lu?'border-left:3px solid #3b82f6;':''}margin-bottom:10px;">
+        <div class="row-between" style="margin-bottom:8px;">
+          <div>
+            <p style="font-weight:700;font-size:15px;">${n.chauffeur_nom}</p>
+            <p style="color:#6b7280;font-size:12px;">${new Date(n.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'long'})} à ${new Date(n.created_at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</p>
+          </div>
+          ${!n.lu?'<span class="badge badge-blue">Nouveau</span>':'<span class="badge badge-gray">Lu</span>'}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
+          <div style="background:#f8fafc;border-radius:8px;padding:8px;text-align:center;">
+            <p style="font-size:16px;font-weight:700;color:#3b82f6;">${n.nb_arrets}</p>
+            <p style="font-size:10px;color:#6b7280;text-transform:uppercase;">Arrêts</p>
+          </div>
+          <div style="background:#f8fafc;border-radius:8px;padding:8px;text-align:center;">
+            <p style="font-size:16px;font-weight:700;color:#10b981;">${n.volume_total} L</p>
+            <p style="font-size:10px;color:#6b7280;text-transform:uppercase;">Volume</p>
+          </div>
+          <div style="background:#f8fafc;border-radius:8px;padding:8px;text-align:center;">
+            <p style="font-size:16px;font-weight:700;color:#f59e0b;">${n.km_total} km</p>
+            <p style="font-size:10px;color:#6b7280;text-transform:uppercase;">Distance</p>
+          </div>
+        </div>
+        ${!n.lu?`<button class="btn-sm" onclick="marquerLu(${n.id})" style="font-size:12px;">Marquer comme lu</button>`:''}
+      </div>`).join('');
+    // Marquer toutes comme lues après 3s
+    setTimeout(async()=>{
+      const ids=notifs.filter(n=>!n.lu).map(n=>n.id);
+      if(ids.length)await sb.from('notifications').update({lu:true}).in('id',ids);
+    },3000);
+  } catch(e){el.innerHTML='<div class="loading">Erreur de chargement</div>';}
+}
+
+async function marquerLu(id){
+  await sb.from('notifications').update({lu:true}).eq('id',id);
+  loadNotifs();
+}
+
+async function renderAdminList(){
   const el=document.getElementById('admin-chauffeurs-list');
   const baseUrl=window.location.origin+window.location.pathname;
+  // Compter notifs non lues
+  try {
+    const{data}=await sb.from('notifications').select('id').eq('lu',false);
+    const count=(data||[]).length;
+    document.getElementById('notif-count').innerHTML=count>0?`<span class="notif-dot"></span>`:'';
+    document.getElementById('notif-badge').style.display=count>0?'block':'none';
+    document.getElementById('notif-badge').textContent=count>0?`${count} nouvelle${count>1?'s':''}` :'';
+  } catch(e){}
+
   el.innerHTML=Object.entries(CHAUFFEURS_CONFIG).map(([slug,cfg])=>{
     const lien=`${baseUrl}?c=${slug}`;
-    return `<div class="card" style="cursor:pointer;" onclick="openAdminTournee('${slug}')">
+    return `<div class="card" style="cursor:pointer;margin-bottom:10px;" onclick="openAdminTournee('${slug}')">
       <div class="row-between">
-        <div class="row gap8">
+        <div class="row" style="gap:12px;">
           <div class="avatar" style="background:${getColor(slug)}22;color:${getColor(slug)};">${cfg.avatar}</div>
-          <div><p style="font-weight:700;">${cfg.nom}</p><p style="color:#6b7280;font-size:12px;">Voir / modifier la tournée</p></div>
+          <div><p style="font-weight:700;font-size:15px;">${cfg.nom}</p><p style="color:#6b7280;font-size:12px;">Voir / modifier la tournée</p></div>
         </div>
         <span class="chevron">›</span>
       </div>
@@ -651,47 +807,41 @@ function renderAdminList(){
   }).join('');
 }
 
-function copyLink(url){navigator.clipboard.writeText(url).then(()=>alert('Lien copié ! Envoyez-le par WhatsApp.'));}
+function copyLink(url){navigator.clipboard.writeText(url).then(()=>alert('Lien copié !'));}
 
 async function openAdminTournee(slug){
   const cfg=CHAUFFEURS_CONFIG[slug];
-  const {data:chauffeurs}=await sb.from('chauffeurs').select('*');
-  state.chauffeurs=chauffeurs||[];
-  const chauffeur=state.chauffeurs.find(c=>c.nom.toLowerCase()===cfg.nom.toLowerCase());
-  if(!chauffeur){alert('Chauffeur introuvable.');return;}
-  state.adminSelectedChauffeur=chauffeur;
+  const{data}=await sb.from('chauffeurs').select('*');
+  state.chauffeurs=data||[];
+  const ch=state.chauffeurs.find(c=>c.nom.toLowerCase()===cfg.nom.toLowerCase());
+  if(!ch){alert('Chauffeur introuvable.');return;}
+  state.adminSelectedChauffeur=ch;
   document.getElementById('admin-tournee-nom').textContent=cfg.nom;
   const baseUrl=window.location.origin+window.location.pathname;
   const lien=`${baseUrl}?c=${slug}`;
   document.getElementById('admin-lien-chauffeur').innerHTML=`
-    <div class="row-between">
-      <p style="font-size:12px;color:#166534;font-weight:600;">🔗 Lien de ${cfg.nom}</p>
-      <button class="btn-sm" onclick="copyLink('${lien}')">Copier</button>
-    </div>
+    <div class="row-between"><p style="font-size:12px;color:#166534;font-weight:700;">🔗 Lien de ${cfg.nom}</p><button class="btn-sm" onclick="copyLink('${lien}')">Copier</button></div>
     <p style="font-size:11px;color:#166534;margin-top:4px;word-break:break-all;">${lien}</p>`;
   const today=getTodayStr();
-  const {data:tournees}=await sb.from('tournees').select('*').eq('chauffeur_id',chauffeur.id).eq('date',today);
-  let tournee=tournees&&tournees.length>0?tournees[0]:null;
-  if(!tournee){const {data:newT}=await sb.from('tournees').insert({chauffeur_id:chauffeur.id,date:today}).select().single();tournee=newT;}
-  state.currentTournee=tournee;
-  await loadAdminArrets(tournee.id);
+  const{data:ts}=await sb.from('tournees').select('*').eq('chauffeur_id',ch.id).eq('date',today);
+  let t=ts&&ts.length>0?ts[0]:null;
+  if(!t){const{data:nt}=await sb.from('tournees').insert({chauffeur_id:ch.id,date:today}).select().single();t=nt;}
+  state.currentTournee=t;
+  const{data:arrets}=await sb.from('arrets').select('*,clients(*)').eq('tournee_id',t.id).order('ordre');
+  state.arrets=arrets||[];
+  renderAdminArrets();
   showScreen('admin-tournee');
-}
-
-async function loadAdminArrets(tourneeId){
-  const {data}=await sb.from('arrets').select('*, clients(*)').eq('tournee_id',tourneeId).order('ordre');
-  state.arrets=data||[];renderAdminArrets();
 }
 
 function renderAdminArrets(){
   const el=document.getElementById('admin-arrets-list');
-  if(!state.arrets.length){el.innerHTML='<div class="loading">Aucun arrêt. Ajoutez des clients ci-dessous.</div>';return;}
+  if(!state.arrets.length){el.innerHTML='<div class="loading">Aucun arrêt. Ajoutez des clients.</div>';return;}
   el.innerHTML=state.arrets.map((a,i)=>{
     const note=a.clients?.note?`<p style="font-size:11px;color:#f59e0b;font-style:italic;margin-top:2px;">📌 ${a.clients.note}</p>`:'';
     const badge=a.statut==='valide'?'<span class="badge badge-green">Validé</span>':'<span class="badge badge-gray">En attente</span>';
     return `<div class="card" style="margin-bottom:8px;">
-      <div class="row-between mb4">
-        <div class="row gap8">
+      <div class="row-between" style="margin-bottom:${a.statut!=='valide'?'8':'0'}px;">
+        <div class="row" style="gap:8px;">
           <div class="circle-num" style="background:#f3f4f6;color:#6b7280;">${i+1}</div>
           <div style="flex:1;min-width:0;">
             <p style="font-weight:700;">${a.clients?.nom||''}</p>
@@ -701,10 +851,10 @@ function renderAdminArrets(){
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
           ${badge}
-          ${a.statut!=='valide'?`<button class="btn-sm" onclick="openEditClient(${a.id},${a.clients?.id})">✎</button>`:''}
+          ${a.statut!=='valide'?`<button class="btn-sm" onclick="openEditModal(${a.id},${a.clients?.id})">✎</button>`:''}
         </div>
       </div>
-      ${a.statut!=='valide'?`<div class="row" style="gap:6px;margin-top:8px;border-top:1px solid #f3f4f6;padding-top:8px;">
+      ${a.statut!=='valide'?`<div class="row" style="gap:6px;border-top:1px solid #f3f4f6;padding-top:8px;">
         <button class="btn-sm" onclick="moveArret(${i},-1)" ${i===0?'disabled style="opacity:0.3"':''}>↑</button>
         <button class="btn-sm" onclick="moveArret(${i},1)" ${i===state.arrets.length-1?'disabled style="opacity:0.3"':''}>↓</button>
       </div>`:''}
@@ -713,49 +863,119 @@ function renderAdminArrets(){
 }
 
 async function moveArret(idx,dir){
-  const newIdx=idx+dir; if(newIdx<0||newIdx>=state.arrets.length)return;
-  const a=state.arrets[idx],b=state.arrets[newIdx];
-  await sb.from('arrets').update({ordre:newIdx}).eq('id',a.id);
+  const ni=idx+dir;if(ni<0||ni>=state.arrets.length)return;
+  const a=state.arrets[idx],b=state.arrets[ni];
+  await sb.from('arrets').update({ordre:ni}).eq('id',a.id);
   await sb.from('arrets').update({ordre:idx}).eq('id',b.id);
-  await loadAdminArrets(state.currentTournee.id);
+  const{data}=await sb.from('arrets').select('*,clients(*)').eq('tournee_id',state.currentTournee.id).order('ordre');
+  state.arrets=data||[];renderAdminArrets();
 }
 
-function openEditClient(arretId,clientId){
-  const a=state.arrets.find(x=>x.id===arretId); if(!a)return;
-  document.getElementById('edit-client-id').value=arretId;
-  document.getElementById('edit-client-client-id').value=clientId;
-  document.getElementById('edit-client-nom').value=a.clients?.nom||'';
-  document.getElementById('edit-client-adresse').value=a.clients?.adresse||'';
-  document.getElementById('edit-client-cp').value=a.clients?.cp||'';
-  document.getElementById('edit-client-ville').value=a.clients?.ville||'';
-  document.getElementById('edit-client-bidons').value=a.clients?.bidons_place||0;
-  document.getElementById('edit-client-note').value=a.clients?.note||'';
+function openEditModal(arretId,clientId){
+  const a=state.arrets.find(x=>x.id===arretId);if(!a)return;
+  document.getElementById('edit-arret-id').value=arretId;
+  document.getElementById('edit-client-id').value=clientId;
+  document.getElementById('edit-nom').value=a.clients?.nom||'';
+  document.getElementById('edit-adresse').value=a.clients?.adresse||'';
+  document.getElementById('edit-cp').value=a.clients?.cp||'';
+  document.getElementById('edit-ville').value=a.clients?.ville||'';
+  document.getElementById('edit-bidons').value=a.clients?.bidons_place||0;
+  document.getElementById('edit-note').value=a.clients?.note||'';
   document.getElementById('modal-edit-client').style.display='flex';
 }
-
 async function saveEditClient(){
-  const clientId=document.getElementById('edit-client-client-id').value;
-  await sb.from('clients').update({nom:document.getElementById('edit-client-nom').value,adresse:document.getElementById('edit-client-adresse').value,cp:document.getElementById('edit-client-cp').value,ville:document.getElementById('edit-client-ville').value,bidons_place:+document.getElementById('edit-client-bidons').value,note:document.getElementById('edit-client-note').value}).eq('id',clientId);
-  closeEditClientModal();await loadAdminArrets(state.currentTournee.id);
+  const cid=document.getElementById('edit-client-id').value;
+  await sb.from('clients').update({nom:document.getElementById('edit-nom').value,adresse:document.getElementById('edit-adresse').value,cp:document.getElementById('edit-cp').value,ville:document.getElementById('edit-ville').value,bidons_place:+document.getElementById('edit-bidons').value,note:document.getElementById('edit-note').value}).eq('id',cid);
+  closeEditModal();
+  const{data}=await sb.from('arrets').select('*,clients(*)').eq('tournee_id',state.currentTournee.id).order('ordre');
+  state.arrets=data||[];renderAdminArrets();
 }
-
-async function deleteClientFromTournee(){
-  await sb.from('arrets').delete().eq('id',document.getElementById('edit-client-id').value);
-  closeEditClientModal();await loadAdminArrets(state.currentTournee.id);
+async function deleteArret(){
+  await sb.from('arrets').delete().eq('id',document.getElementById('edit-arret-id').value);
+  closeEditModal();
+  const{data}=await sb.from('arrets').select('*,clients(*)').eq('tournee_id',state.currentTournee.id).order('ordre');
+  state.arrets=data||[];renderAdminArrets();
 }
-
-function closeEditClientModal(){document.getElementById('modal-edit-client').style.display='none';}
+function closeEditModal(){document.getElementById('modal-edit-client').style.display='none';}
 function showAddClientModal(){document.getElementById('modal-add-client').style.display='flex';}
 function closeAddClientModal(){document.getElementById('modal-add-client').style.display='none';}
-
 async function saveNewClient(){
-  const nom=document.getElementById('new-client-nom').value.trim(); if(!nom)return;
-  const {data:client}=await sb.from('clients').insert({nom,adresse:document.getElementById('new-client-adresse').value,cp:document.getElementById('new-client-cp').value,ville:document.getElementById('new-client-ville').value,bidons_place:+document.getElementById('new-client-bidons').value,note:document.getElementById('new-client-note').value}).select().single();
+  const nom=document.getElementById('new-nom').value.trim();if(!nom)return;
+  const{data:client}=await sb.from('clients').insert({nom,adresse:document.getElementById('new-adresse').value,cp:document.getElementById('new-cp').value,ville:document.getElementById('new-ville').value,bidons_place:+document.getElementById('new-bidons').value,note:document.getElementById('new-note').value}).select().single();
   await sb.from('arrets').insert({tournee_id:state.currentTournee.id,client_id:client.id,ordre:state.arrets.length});
   closeAddClientModal();
-  ['nom','adresse','cp','ville','note'].forEach(f=>document.getElementById('new-client-'+f).value='');
-  document.getElementById('new-client-bidons').value='1';
-  await loadAdminArrets(state.currentTournee.id);
+  ['nom','adresse','cp','ville','note'].forEach(f=>document.getElementById('new-'+f).value='');
+  document.getElementById('new-bidons').value='1';
+  const{data}=await sb.from('arrets').select('*,clients(*)').eq('tournee_id',state.currentTournee.id).order('ordre');
+  state.arrets=data||[];renderAdminArrets();
+}
+
+async function loadRecap(){
+  const date=document.getElementById('recap-date').value;if(!date)return;
+  const el=document.getElementById('recap-content');
+  el.innerHTML='<div class="loading">Chargement...</div>';
+  const{data:tournees}=await sb.from('tournees').select('*,chauffeurs(*)').eq('date',date);
+  if(!tournees||!tournees.length){el.innerHTML=`<div class="card" style="text-align:center;padding:2rem;color:#6b7280;"><div style="font-size:32px;margin-bottom:8px;">📋</div><p style="font-weight:700;">Aucune tournée ce jour-là</p></div>`;return;}
+  let html='',grandVol=0;
+  for(const t of tournees){
+    const{data:arrets}=await sb.from('arrets').select('*,clients(*),bidons_collectes(*)').eq('tournee_id',t.id).order('ordre');
+    const done=(arrets||[]).filter(a=>a.statut==='valide').length,total=(arrets||[]).length;
+    const vol=(arrets||[]).reduce((acc,a)=>acc+(a.bidons_collectes||[]).reduce((s,b)=>s+Math.round(b.volume*b.niveau),0),0);
+    grandVol+=vol;
+    html+=`<div class="card" style="margin-bottom:16px;">
+      <div class="row-between" style="margin-bottom:12px;">
+        <div class="row" style="gap:10px;">
+          <div class="avatar" style="background:#3b82f622;color:#3b82f6;width:40px;height:40px;font-size:13px;">${t.chauffeurs?.avatar||'?'}</div>
+          <div><p style="font-weight:700;font-size:15px;">${t.chauffeurs?.nom||'—'}</p><p style="color:#6b7280;font-size:12px;">${done}/${total} arrêts · ${vol} L</p></div>
+        </div>
+        <span class="badge ${done===total&&total>0?'badge-green':'badge-gray'}">${done===total&&total>0?'Terminé':'En cours'}</span>
+      </div>
+      ${(arrets||[]).map((a,i)=>{
+        const v=(a.bidons_collectes||[]).reduce((s,b)=>s+Math.round(b.volume*b.niveau),0);
+        const b=(a.bidons_collectes||[]).map(b=>`${b.volume}L/${Math.round(b.niveau*100)}%`).join(', ');
+        return `<div style="padding:8px 0;border-bottom:0.5px solid #f3f4f6;">
+          <div class="row-between">
+            <div class="row" style="gap:8px;">
+              <div class="circle-num" style="background:${a.statut==='valide'?'#d1fae5':'#f3f4f6'};color:${a.statut==='valide'?'#059669':'#9ca3af'};width:26px;height:26px;font-size:11px;">${a.statut==='valide'?'✓':i+1}</div>
+              <div>
+                <p style="font-weight:600;font-size:13px;">${a.clients?.nom||'—'}</p>
+                <p style="font-size:11px;color:#6b7280;">${a.clients?.cp||''} ${a.clients?.ville||''}</p>
+                ${b?`<p style="font-size:11px;color:#3b82f6;margin-top:2px;">🛢 ${b} → ${v} L</p>`:''}
+                ${a.commentaire?`<p style="font-size:11px;color:#f59e0b;font-style:italic;margin-top:2px;">💬 "${a.commentaire}"</p>`:''}
+                ${a.signataire?`<p style="font-size:11px;color:#059669;margin-top:2px;">✍️ ${a.signataire} · ${a.heure_validation||''}</p>`:''}
+              </div>
+            </div>
+            ${a.signature_url?`<img src="${a.signature_url}" style="height:36px;border:1px solid #e5e7eb;border-radius:6px;background:#fafafa;"/>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+      <button onclick="printRecap('${t.chauffeurs?.nom||''}','${date}',${JSON.stringify(arrets||[]).replace(/'/g,'&#39;')})" style="width:100%;margin-top:12px;padding:10px;border-radius:10px;border:1px solid #d1d5db;background:#fff;font-weight:700;font-size:13px;cursor:pointer;">🖨️ Imprimer / PDF</button>
+    </div>`;
+  }
+  el.innerHTML=html;
+}
+
+function printRecap(nom,date,arrets){
+  const vol=arrets.reduce((acc,a)=>acc+(a.bidons_collectes||[]).reduce((s,b)=>s+Math.round(b.volume*b.niveau),0),0);
+  const dateStr=new Date(date+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Récap ${nom}</title>
+  <style>body{font-family:Arial,sans-serif;font-size:12px;padding:30px 40px;max-width:720px;margin:0 auto;}h1{font-size:18px;margin-bottom:4px;}
+  .header{display:flex;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:12px;margin-bottom:16px;}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .stat{background:#f8fafc;border-radius:8px;padding:10px;text-align:center;}.stat-val{font-size:20px;font-weight:800;color:#2563eb;}.stat-lbl{font-size:10px;color:#6b7280;text-transform:uppercase;}
+  table{width:100%;border-collapse:collapse;}th{background:#1a1a1a;color:#fff;padding:8px 10px;font-size:11px;text-align:left;}td{padding:8px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;vertical-align:top;}
+  .footer{border-top:1px solid #ddd;padding-top:10px;font-size:10px;color:#888;display:flex;justify-content:space-between;margin-top:16px;}
+  @media print{body{padding:10px 20px;}}</style></head><body>
+  <div class="header"><div><h1>Récapitulatif tournée — ${nom}</h1><p>${dateStr}</p></div><div style="text-align:right;font-size:11px;color:#888;"><p>EasyCollect</p><p>Généré le ${new Date().toLocaleDateString('fr-FR')}</p></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">${arrets.filter(a=>a.statut==='valide').length}/${arrets.length}</div><div class="stat-lbl">Arrêts</div></div>
+    <div class="stat"><div class="stat-val">${vol} L</div><div class="stat-lbl">Volume</div></div>
+    <div class="stat"><div class="stat-val">${arrets.filter(a=>a.heure_validation).slice(-1)[0]?.heure_validation||'—'}</div><div class="stat-lbl">Heure fin</div></div>
+  </div>
+  <table><thead><tr><th>#</th><th>Établissement</th><th>Bidons</th><th>Volume</th><th>Commentaire</th><th>Signataire</th><th>Heure</th></tr></thead>
+  <tbody>${arrets.map((a,i)=>{const v=(a.bidons_collectes||[]).reduce((s,b)=>s+Math.round(b.volume*b.niveau),0);const b=(a.bidons_collectes||[]).map(b=>`${b.volume}L/${Math.round(b.niveau*100)}%`).join(', ');return `<tr><td>${i+1}</td><td><strong>${a.clients?.nom||'—'}</strong><br>${a.clients?.adresse||''}<br>${a.clients?.cp||''} ${a.clients?.ville||''}</td><td>${b||'—'}</td><td><strong>${v}L</strong></td><td>${a.commentaire||'—'}</td><td>${a.signataire||'—'}${a.signature_url?`<br><img src="${a.signature_url}" style="max-height:35px;border:1px solid #ddd;border-radius:4px;"/>`:''}</td><td>${a.heure_validation||'—'}</td></tr>`;}).join('')}</tbody></table>
+  <div class="footer"><span>EasyCollect — ${dateStr}</span><span>${nom}</span></div></body></html>`;
+  const w=window.open('','_blank');w.document.write(html);w.document.close();w.print();
 }
 </script>
 </body>
