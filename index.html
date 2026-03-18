@@ -313,10 +313,28 @@ textarea{resize:vertical;min-height:70px;}
   <div id="tab-notifs" style="display:none;"><div id="notifs-list"><div class="loading">Chargement...</div></div></div>
   <div id="tab-recap" style="display:none;">
     <div class="card" style="margin-bottom:12px;">
-      <p class="label" style="margin-bottom:8px;">Sélectionner une date</p>
+      <p class="label" style="margin-bottom:8px;">Récap par date</p>
       <div style="display:flex;gap:8px;">
         <input type="date" id="recap-date" style="flex:1;"/>
         <button class="btn-sm" style="background:#3b82f6;color:#fff;border:none;" onclick="loadRecap()">Voir</button>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:12px;background:#f0fdf4;border:1px solid #86efac;">
+      <p class="label" style="margin-bottom:10px;">Export Excel par chauffeur</p>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <div style="flex:1;"><p style="font-size:11px;color:#6b7280;margin-bottom:4px;">Du</p><input type="date" id="export-date-debut" /></div>
+        <div style="flex:1;"><p style="font-size:11px;color:#6b7280;margin-bottom:4px;">Au</p><input type="date" id="export-date-fin" /></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        ${Object.entries(CHAUFFEURS_CONFIG).map(([slug,cfg])=>`
+          <button onclick="exportExcel('${slug}', document.getElementById('export-date-debut').value, document.getElementById('export-date-fin').value)"
+            style="padding:10px;border-radius:10px;border:1.5px solid ${getColor(slug)}55;background:${getColor(slug)}11;color:${getColor(slug)};font-weight:700;font-size:13px;cursor:pointer;">
+            📊 ${cfg.nom}
+          </button>`).join('')}
+        <button onclick="exportExcelTous(document.getElementById('export-date-debut').value, document.getElementById('export-date-fin').value)"
+          style="padding:10px;border-radius:10px;border:1.5px solid #6b728055;background:#f3f4f6;color:#374151;font-weight:700;font-size:13px;cursor:pointer;grid-column:span 2;">
+          📊 Tous les chauffeurs
+        </button>
       </div>
     </div>
     <div id="recap-content"></div>
@@ -908,6 +926,120 @@ async function saveNewClient(){
   document.getElementById('new-bidons').value='1';
   const{data}=await sb.from('arrets').select('*,clients(*)').eq('tournee_id',state.currentTournee.id).order('ordre');
   state.arrets=data||[];renderAdminArrets();
+}
+
+// ── CONVERSION KG ─────────────────────────────────────────────
+const POIDS_TABLE = {
+  b60:  { 0: 0, 0.25: 0, 0.5: 25, 0.75: 35, 1: 50 },
+  b80:  { 0: 0, 0.25: 0, 0.5: 40, 0.75: 60, 1: 80 },
+  b120: { 0: 0, 0.25: 0, 0.5: 50, 0.75: 75, 1: 100 },
+  b150: { 0: 0, 0.25: 0, 0.5: 60, 0.75: 90, 1: 135 },
+};
+function getKg(typeId, niveau) {
+  const table = POIDS_TABLE[typeId];
+  if (!table) return 0;
+  const closest = Object.keys(table).reduce((a, b) => Math.abs(b - niveau) < Math.abs(a - niveau) ? b : a);
+  return table[closest] || 0;
+}
+
+// ── EXPORT EXCEL ───────────────────────────────────────────────
+async function exportExcel(slug, dateDebut, dateFin) {
+  const cfg = CHAUFFEURS_CONFIG[slug];
+  const { data: chauffeurs } = await sb.from('chauffeurs').select('*');
+  const ch = chauffeurs.find(c => c.nom.toLowerCase() === cfg.nom.toLowerCase());
+  if (!ch) { alert('Chauffeur introuvable'); return; }
+
+  const { data: tournees } = await sb.from('tournees').select('*')
+    .eq('chauffeur_id', ch.id)
+    .gte('date', dateDebut)
+    .lte('date', dateFin)
+    .order('date');
+
+  if (!tournees || !tournees.length) { alert('Aucune tournée sur cette période'); return; }
+
+  let allRows = [];
+  let totalKg = 0, totalVol = 0, totalKm = 0;
+  const clientTotaux = {};
+
+  for (const t of tournees) {
+    const { data: arrets } = await sb.from('arrets')
+      .select('*, clients(*), bidons_collectes(*)')
+      .eq('tournee_id', t.id)
+      .eq('statut', 'valide')
+      .order('ordre');
+
+    for (const a of (arrets || [])) {
+      for (const b of (a.bidons_collectes || [])) {
+        const kg = getKg(b.type_id, b.niveau);
+        const vol = Math.round(b.volume * b.niveau);
+        totalKg += kg;
+        totalVol += vol;
+        const clientNom = a.clients?.nom || '—';
+        if (!clientTotaux[clientNom]) clientTotaux[clientNom] = { vol: 0, kg: 0, passages: 0 };
+        clientTotaux[clientNom].vol += vol;
+        clientTotaux[clientNom].kg += kg;
+        clientTotaux[clientNom].passages++;
+        allRows.push({
+          date: t.date,
+          chauffeur: cfg.nom,
+          restaurant: clientNom,
+          adresse: a.clients?.adresse || '',
+          cp: a.clients?.cp || '',
+          ville: a.clients?.ville || '',
+          bidon: BIDON_LABELS[b.type_id] || b.type_id,
+          niveau: Math.round(b.niveau * 100) + '%',
+          volume_l: vol,
+          poids_kg: kg,
+          signataire: a.signataire || '',
+          heure: a.heure_validation || '',
+          commentaire: a.commentaire || ''
+        });
+      }
+    }
+  }
+
+  // Générer le CSV (compatible Excel)
+  const sep = ';';
+  const lines = [];
+
+  // En-tête
+  lines.push(`EASYCOLLECT — Rapport de tournée`);
+  lines.push(`Chauffeur${sep}${cfg.nom}`);
+  lines.push(`Période${sep}${dateDebut} au ${dateFin}`);
+  lines.push(`Total volume${sep}${totalVol} L`);
+  lines.push(`Total poids${sep}${totalKg} kg`);
+  lines.push('');
+
+  // Tableau détail
+  lines.push(['Date','Chauffeur','Restaurant','Adresse','CP','Ville','Bidon','Niveau','Volume (L)','Poids (kg)','Signataire','Heure','Commentaire'].join(sep));
+  allRows.forEach(r => {
+    lines.push([r.date,r.chauffeur,r.restaurant,r.adresse,r.cp,r.ville,r.bidon,r.niveau,r.volume_l,r.poids_kg,r.signataire,r.heure,r.commentaire].join(sep));
+  });
+
+  lines.push('');
+  lines.push('TOTAL PAR CLIENT');
+  lines.push(['Restaurant','Passages','Volume total (L)','Poids total (kg)'].join(sep));
+  Object.entries(clientTotaux).sort((a,b) => b[1].kg - a[1].kg).forEach(([nom, d]) => {
+    lines.push([nom, d.passages, d.vol, d.kg].join(sep));
+  });
+  lines.push(['TOTAL','',totalVol,totalKg].join(sep));
+
+  const csv = '\uFEFF' + lines.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `EasyCollect_${cfg.nom}_${dateDebut}_${dateFin}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function exportExcelTous(dateDebut, dateFin) {
+  if (!dateDebut || !dateFin) { alert('Sélectionnez une période'); return; }
+  for (const slug of Object.keys(CHAUFFEURS_CONFIG)) {
+    await exportExcel(slug, dateDebut, dateFin);
+    await new Promise(r => setTimeout(r, 500));
+  }
 }
 
 async function loadRecap(){
