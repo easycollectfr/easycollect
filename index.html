@@ -563,7 +563,15 @@ async function validateChecklist(){
   if(!km){err.textContent='Saisissez le kilométrage de départ.';err.style.display='block';return;}
   if(!state.photos.compteur){err.textContent='Prenez une photo du compteur kilométrique.';err.style.display='block';return;}
   if(!state.photos.selfie){err.textContent='Prenez un selfie.';err.style.display='block';return;}
-  if(!state.photos.camion||Object.keys(state.photos.camion).length<4){err.textContent='Prenez les 4 photos du camion (face, côté droit, côté gauche, arrière).';err.style.display='block';return;}
+  const camionFacesRequises = ['face','droite','gauche','arriere'];
+  const camionPhotosPrises = camionFacesRequises.filter(f => state.photos.camion && state.photos.camion[f]);
+  if(camionPhotosPrises.length < 4){
+    const manquantes = camionFacesRequises.filter(f => !state.photos.camion || !state.photos.camion[f]);
+    const labels = {'face':'Face','droite':'Côté droit','gauche':'Côté gauche','arriere':'Arrière'};
+    err.textContent = 'Photos manquantes : ' + manquantes.map(f => labels[f]).join(', ');
+    err.style.display='block';
+    return;
+  }
   err.style.display='none';
   state.kmDepart=km;
   showScreen('chauffeur-loading');
