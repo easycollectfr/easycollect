@@ -450,7 +450,8 @@ window.addEventListener('DOMContentLoaded',async()=>{
     state.chauffeurs=data||[];
     const cfg=CHAUFFEURS_CONFIG[slug];
     const ch=state.chauffeurs.find(c=>c.nom.toLowerCase()===cfg.nom.toLowerCase());
-    if(ch){state.currentChauffeur=ch;state.currentSlug=slug;showScreen('checklist');}
+    if(ch){state.currentChauffeur=ch;state.currentSlug=slug;  showScreen('checklist');
+  setTimeout(initCamionPhotos, 100);}
     else{alert('Chauffeur introuvable');showScreen('home');}
   } else showScreen('home');
 });
@@ -464,6 +465,77 @@ function showScreen(name){
 }
 
 // ── CHECKLIST ──────────────────────────────────────────────────
+const CAMION_FACES = [
+  { id: 'face',   label: 'Face',       icon: '⬆️' },
+  { id: 'droite', label: 'Côté droit', icon: '➡️' },
+  { id: 'gauche', label: 'Côté gauche',icon: '⬅️' },
+  { id: 'arriere',label: 'Arrière',    icon: '⬇️' },
+];
+
+function initCamionPhotos() {
+  if (!state.photos.camion) state.photos.camion = {};
+  const grid = document.getElementById('camion-photos-grid');
+  if (!grid) return;
+  grid.innerHTML = CAMION_FACES.map(f => `
+    <div id="camion-slot-${f.id}" style="position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1;background:#f3f4f6;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed #d1d5db;" onclick="triggerCamionPhoto('${f.id}')">
+      <input type="file" id="camion-input-${f.id}" accept="image/*" capture="environment" style="display:none;" onchange="handleCamionPhoto(event,'${f.id}')"/>
+      <div id="camion-preview-${f.id}" style="display:none;position:absolute;inset:0;">
+        <img id="camion-img-${f.id}" style="width:100%;height:100%;object-fit:cover;"/>
+        <button onclick="event.stopPropagation();removeCamionPhoto('${f.id}')" style="position:absolute;top:4px;right:4px;padding:2px 6px;border-radius:6px;border:none;background:rgba(0,0,0,0.5);color:#fff;font-size:11px;cursor:pointer;">✕</button>
+        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);padding:4px;text-align:center;">
+          <span style="font-size:11px;color:#fff;font-weight:700;">${f.label}</span>
+        </div>
+      </div>
+      <div id="camion-empty-${f.id}">
+        <div style="font-size:22px;margin-bottom:4px;">${f.icon}</div>
+        <p style="font-size:11px;color:#6b7280;font-weight:600;text-align:center;">${f.label}</p>
+        <p style="font-size:10px;color:#9ca3af;margin-top:2px;">Appuyer pour photographier</p>
+      </div>
+    </div>
+  `).join('');
+  // Restaurer photos existantes
+  CAMION_FACES.forEach(f => {
+    if (state.photos.camion[f.id]) showCamionPreview(f.id, state.photos.camion[f.id]);
+  });
+}
+
+function triggerCamionPhoto(faceId) {
+  document.getElementById(`camion-input-${faceId}`).click();
+}
+
+function handleCamionPhoto(e, faceId) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    if (!state.photos.camion) state.photos.camion = {};
+    state.photos.camion[faceId] = ev.target.result;
+    showCamionPreview(faceId, ev.target.result);
+    // Auto-passer à la photo suivante
+    const faces = CAMION_FACES.map(f => f.id);
+    const nextIdx = faces.indexOf(faceId) + 1;
+    if (nextIdx < faces.length && !state.photos.camion[faces[nextIdx]]) {
+      setTimeout(() => triggerCamionPhoto(faces[nextIdx]), 600);
+    }
+  };
+  r.readAsDataURL(f);
+}
+
+function showCamionPreview(faceId, dataUrl) {
+  document.getElementById(`camion-img-${faceId}`).src = dataUrl;
+  document.getElementById(`camion-preview-${faceId}`).style.display = 'block';
+  document.getElementById(`camion-empty-${faceId}`).style.display = 'none';
+  document.getElementById(`camion-slot-${faceId}`).style.borderColor = '#10b981';
+  document.getElementById(`camion-slot-${faceId}`).style.borderStyle = 'solid';
+}
+
+function removeCamionPhoto(faceId) {
+  if (state.photos.camion) delete state.photos.camion[faceId];
+  document.getElementById(`camion-preview-${faceId}`).style.display = 'none';
+  document.getElementById(`camion-empty-${faceId}`).style.display = 'flex';
+  document.getElementById(`camion-slot-${faceId}`).style.borderColor = '#d1d5db';
+  document.getElementById(`camion-slot-${faceId}`).style.borderStyle = 'dashed';
+}
+
 function handleChecklistPhoto(type){
   const input=document.getElementById(`photo-${type}-input`);
   const f=input.files[0]; if(!f)return;
@@ -491,7 +563,7 @@ async function validateChecklist(){
   if(!km){err.textContent='Saisissez le kilométrage de départ.';err.style.display='block';return;}
   if(!state.photos.compteur){err.textContent='Prenez une photo du compteur kilométrique.';err.style.display='block';return;}
   if(!state.photos.selfie){err.textContent='Prenez un selfie.';err.style.display='block';return;}
-  if(!state.photos.camion){err.textContent='Prenez une photo du camion.';err.style.display='block';return;}
+  if(!state.photos.camion||Object.keys(state.photos.camion).length<4){err.textContent='Prenez les 4 photos du camion (face, côté droit, côté gauche, arrière).';err.style.display='block';return;}
   err.style.display='none';
   state.kmDepart=km;
   showScreen('chauffeur-loading');
